@@ -1,0 +1,436 @@
+[
+  {
+    "id": "lamine-yamal",
+    "name": "Lamine Yamal",
+    "position": "FWD",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2007-07-13",
+    "height": 180,
+    "lamasiaYear": 2014,
+    "preSeasons": [
+      {
+        "season": "2023/24",
+        "year": 2023,
+        "appearances": 3,
+        "minutesPlayed": 120,
+        "goals": 1,
+        "assists": 2,
+        "notes": "ทำประตูและแอสซิสต์ใน pre-season ก่อนจะขึ้นทีมชุดใหญ่อย่างเป็นทางการ"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "อัจฉริยะปีกขวาที่กลายเป็นหนึ่งในนักเตะที่ดีที่สุดในโลก ผู้คว้า Kopa Trophy และมีบทบาทหลักในการคว้าแชมป์ La Liga ของบาร์เซโลน่า",
+    "jerseyNumber": 19
+  },
+  {
+    "id": "pau-cubarsi",
+    "name": "Pau Cubarsí",
+    "position": "DEF",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2007-01-22",
+    "height": 188,
+    "lamasiaYear": 2015,
+    "preSeasons": [
+      {
+        "season": "2023/24",
+        "year": 2023,
+        "appearances": 4,
+        "minutesPlayed": 270,
+        "goals": 0,
+        "assists": 1,
+        "notes": "แสดงความสงบและความเป็นผู้นำในแนวรับ ดึงดูดความสนใจจาก Hansi Flick"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "เซ็นเตอร์แบ็คอัจฉริยะที่เล่นอย่างเย็นชาเกินวัย กลายเป็นหนึ่งในกองหลังที่ดีที่สุดในโลกแม้อายุเพียง 17 ปี",
+    "jerseyNumber": 2
+  },
+  {
+    "id": "marc-casado",
+    "name": "Marc Casadó",
+    "position": "MID",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2003-06-17",
+    "height": 178,
+    "lamasiaYear": 2012,
+    "preSeasons": [
+      {
+        "season": "2023/24",
+        "year": 2023,
+        "appearances": 4,
+        "minutesPlayed": 310,
+        "goals": 0,
+        "assists": 3,
+        "notes": "ตัวเลือกหลักในตำแหน่งพิวอทหลังจาก pre-season ที่ยอดเยี่ยม"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "กองกลางตัวรับที่เป็นหัวใจของระบบเกมรุกของบาร์ซ่า ทำหน้าที่สร้างสมดุลทั้งรุกและรับได้อย่างสมบูรณ์แบบ",
+    "jerseyNumber": 35
+  },
+  {
+    "id": "hector-fort",
+    "name": "Héctor Fort",
+    "position": "DEF",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2005-11-26",
+    "height": 175,
+    "lamasiaYear": 2016,
+    "preSeasons": [
+      {
+        "season": "2023/24",
+        "year": 2023,
+        "appearances": 3,
+        "minutesPlayed": 220,
+        "goals": 1,
+        "assists": 1,
+        "notes": "แบ็คขวาที่โดดเด่นด้วยความเร็วและความสามารถในการทับซ้อน"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "แบ็คขวาที่มีพลังงานสูง เล่นได้ทั้งในและนอก ถูกมองว่าเป็นอนาคตของตำแหน่งนี้ใน Camp Nou",
+    "jerseyNumber": 22
+  },
+  {
+    "id": "marc-bernal",
+    "name": "Marc Bernal",
+    "position": "MID",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2006-09-16",
+    "height": 180,
+    "lamasiaYear": 2018,
+    "preSeasons": [
+      {
+        "season": "2024/25",
+        "year": 2024,
+        "appearances": 4,
+        "minutesPlayed": 270,
+        "goals": 0,
+        "assists": 2,
+        "notes": "กองกลางที่น่าประทับใจมากใน pre-season ก่อนได้รับโอกาสลงสนามกับ Valencia"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "กองกลางรุ่นใหม่ที่ผ่าน pre-season 2024/25 ได้อย่างโดดเด่น ก่อนบาดเจ็บสาหัสช่วงต้นฤดูกาล",
+    "jerseyNumber": 28
+  },
+  {
+    "id": "gerard-martin",
+    "name": "Gerard Martín",
+    "position": "DEF",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2001-06-29",
+    "height": 181,
+    "lamasiaYear": 2014,
+    "preSeasons": [
+      {
+        "season": "2024/25",
+        "year": 2024,
+        "appearances": 5,
+        "minutesPlayed": 380,
+        "goals": 0,
+        "assists": 3,
+        "notes": "แบ็คซ้ายที่โชว์ฟอร์มยอดเยี่ยมใน pre-season และได้รับโอกาสลงสนามนัดเปิดฤดูกาล"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "แบ็คซ้ายที่ขึ้นมาเป็นตัวเลือกหลักในฤดูกาล 2024/25 หลังจากฟอร์มยอดเยี่ยมใน pre-season",
+    "jerseyNumber": 12
+  },
+  {
+    "id": "pau-victor",
+    "name": "Pau Víctor",
+    "position": "FWD",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2001-03-25",
+    "height": 176,
+    "lamasiaYear": 2012,
+    "preSeasons": [
+      {
+        "season": "2024/25",
+        "year": 2024,
+        "appearances": 5,
+        "minutesPlayed": 320,
+        "goals": 3,
+        "assists": 2,
+        "notes": "ทำประตูในทัวร์สหรัฐอเมริกา ยืนยันตัวเองในทีมชุดใหญ่"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "กองหน้าที่มีความยืดหยุ่น เล่นได้หลายตำแหน่งในแนวรุก โดดเด่นด้วยการจบสกอร์และความฉลาดเชิงยุทธวิธี",
+    "jerseyNumber": 26
+  },
+  {
+    "id": "sergi-dominguez",
+    "name": "Sergi Domínguez",
+    "position": "DEF",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2004-12-07",
+    "height": 185,
+    "lamasiaYear": 2017,
+    "preSeasons": [
+      {
+        "season": "2024/25",
+        "year": 2024,
+        "appearances": 3,
+        "minutesPlayed": 200,
+        "goals": 0,
+        "assists": 0,
+        "notes": "เซ็นเตอร์แบ็คที่มีพื้นฐานดีมาก โดดเด่นด้วยการกินพื้นที่และเกมรับ"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "กองหลังตัวสำรองที่ผ่านการฝึกซ้อมกับทีมชุดใหญ่ในช่วง pre-season 2024 ยังอยู่ระหว่างพัฒนากับ Barça B",
+    "jerseyNumber": null
+  },
+  {
+    "id": "jofre-torrents",
+    "name": "Jofre Torrents",
+    "position": "MID",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2005-05-15",
+    "height": 176,
+    "lamasiaYear": 2019,
+    "preSeasons": [
+      {
+        "season": "2025/26",
+        "year": 2025,
+        "appearances": 4,
+        "minutesPlayed": 280,
+        "goals": 1,
+        "assists": 2,
+        "notes": "กองกลางที่ฉลาดในการอ่านเกม ได้รับโอกาสลงสนามในนัดสำคัญช่วง pre-season"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "กองกลางสร้างเกมที่มีวิสัยทัศน์ยอดเยี่ยม ได้รับการฝึกซ้อมกับทีมชุดใหญ่ในช่วง pre-season 2025",
+    "jerseyNumber": null
+  },
+  {
+    "id": "tommy-marques",
+    "name": "Tommy Marqués",
+    "position": "FWD",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2006-03-08",
+    "height": 174,
+    "lamasiaYear": 2018,
+    "preSeasons": [
+      {
+        "season": "2025/26",
+        "year": 2025,
+        "appearances": 5,
+        "minutesPlayed": 340,
+        "goals": 3,
+        "assists": 3,
+        "notes": "กองหน้าที่โดดเด่นที่สุดใน pre-season 2025"
+      },
+      {
+        "season": "2026/27",
+        "year": 2026,
+        "appearances": 4,
+        "minutesPlayed": 290,
+        "goals": 2,
+        "assists": 1,
+        "notes": "ยังคงเป็นหนึ่งในผู้เล่นที่น่าจับตามองที่สุดของ La Masia"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "กองหน้าที่เร็วและทรงพลัง ได้รับโอกาสใน pre-season ถึงสองปีติดต่อกัน โดดเด่นด้วยสัมผัสการจบสกอร์",
+    "jerseyNumber": null
+  },
+  {
+    "id": "xavi-espart",
+    "name": "Xavi Espart",
+    "position": "GK",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2005-07-20",
+    "height": 191,
+    "lamasiaYear": 2016,
+    "preSeasons": [
+      {
+        "season": "2025/26",
+        "year": 2025,
+        "appearances": 2,
+        "minutesPlayed": 180,
+        "goals": 0,
+        "assists": 0,
+        "notes": "ผู้รักษาประตูที่มีฝีมือยอดเยี่ยม แสดงความมั่นใจสูงในช่วง pre-season"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "ผู้รักษาประตูที่มีพรสวรรค์สูง ได้รับโอกาสฝึกซ้อมกับทีมชุดใหญ่ พร้อมสำหรับขั้นต่อไปในอาชีพ",
+    "jerseyNumber": null
+  },
+  {
+    "id": "pedro-dro-fernandez",
+    "name": "Pedro 'Dro' Fernández",
+    "position": "MID",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2006-11-04",
+    "height": 178,
+    "lamasiaYear": 2020,
+    "preSeasons": [
+      {
+        "season": "2025/26",
+        "year": 2025,
+        "appearances": 3,
+        "minutesPlayed": 210,
+        "goals": 0,
+        "assists": 2,
+        "notes": "กองกลางที่ทรงพลังในการกดดันและสร้างจังหวะเกม"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "กองกลางตัวรับที่ทรงพลัง เชี่ยวชาญในการยึดครองพื้นที่กลางสนามและสร้างเกมจากพื้นที่ลึก",
+    "jerseyNumber": null
+  },
+  {
+    "id": "iker-rodriguez",
+    "name": "Iker Rodríguez",
+    "position": "DEF",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2007-02-14",
+    "height": 180,
+    "lamasiaYear": 2021,
+    "preSeasons": [
+      {
+        "season": "2026/27",
+        "year": 2026,
+        "appearances": 3,
+        "minutesPlayed": 180,
+        "goals": 0,
+        "assists": 1,
+        "notes": "แบ็คที่มีทักษะในการขึ้นเกมรุกและอ่านสถานการณ์ดีมาก"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "แบ็ครุ่นใหม่ที่ร่วม pre-season 2026 หนึ่งในนักเตะดาวรุ่งที่ Hansi Flick ให้ความสนใจเป็นพิเศษ",
+    "jerseyNumber": null
+  },
+  {
+    "id": "brian-farinas",
+    "name": "Brian Fariñas",
+    "position": "MID",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2007-06-20",
+    "height": 177,
+    "lamasiaYear": 2019,
+    "preSeasons": [
+      {
+        "season": "2026/27",
+        "year": 2026,
+        "appearances": 5,
+        "minutesPlayed": 360,
+        "goals": 2,
+        "assists": 4,
+        "notes": "ผู้เล่นที่โดดเด่นที่สุดในทีม La Masia ที่ร่วม pre-season 2026 ฟลิคประทับใจมาก"
+      }
+    ],
+    "currentStatus": "promoted",
+    "currentClub": "FC Barcelona",
+    "descriptionTH": "กองกลางสร้างเกมที่กำลังมาแรงที่สุดในจากาดมาเซีย ได้รับการโปรโมทสู่ทีมชุดใหญ่ประจำฤดูกาล 2026/27",
+    "jerseyNumber": 36
+  },
+  {
+    "id": "alvaro-cortes",
+    "name": "Álvaro Cortés",
+    "position": "FWD",
+    "nationality": "Spain",
+    "flagEmoji": "🇪🇸",
+    "dateOfBirth": "2006-09-30",
+    "height": 173,
+    "lamasiaYear": 2020,
+    "preSeasons": [
+      {
+        "season": "2026/27",
+        "year": 2026,
+        "appearances": 4,
+        "minutesPlayed": 280,
+        "goals": 2,
+        "assists": 2,
+        "notes": "กองหน้าเร็วที่น่าจับตามองมาก โดดเด่นใน pre-season ทัวร์ 2026"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "ปีกที่มีความเร็วสูงและเทคนิคดี หนึ่งในผู้เล่นที่โดดเด่นที่สุดใน pre-season ทัวร์ 2026",
+    "jerseyNumber": null
+  },
+  {
+    "id": "shane-kluivert",
+    "name": "Shane Kluivert",
+    "position": "FWD",
+    "nationality": "Netherlands",
+    "flagEmoji": "🇳🇱",
+    "dateOfBirth": "2007-03-28",
+    "height": 178,
+    "lamasiaYear": 2022,
+    "preSeasons": [
+      {
+        "season": "2026/27",
+        "year": 2026,
+        "appearances": 3,
+        "minutesPlayed": 210,
+        "goals": 1,
+        "assists": 2,
+        "notes": "ลูกชายของตำนาน Patrick Kluivert มีพรสวรรค์ติดตัวมาอย่างชัดเจน"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "บุตรชายของตำนาน Patrick Kluivert ที่กำลังสร้างชื่อของตัวเองใน La Masia เล่นมีสไตล์ที่ฉลาดและมีวิสัยทัศน์สูง",
+    "jerseyNumber": null
+  },
+  {
+    "id": "ebrima-tunkara",
+    "name": "Ebrima Tunkara",
+    "position": "MID",
+    "nationality": "Gambia",
+    "flagEmoji": "🇬🇲",
+    "dateOfBirth": "2007-04-10",
+    "height": 183,
+    "lamasiaYear": 2023,
+    "preSeasons": [
+      {
+        "season": "2026/27",
+        "year": 2026,
+        "appearances": 3,
+        "minutesPlayed": 200,
+        "goals": 1,
+        "assists": 1,
+        "notes": "กองกลางที่ทรงพลังร่างกาย มีเทคนิคสูงและลงบอลแข็งแกร่ง"
+      }
+    ],
+    "currentStatus": "academy",
+    "currentClub": "Barça B",
+    "descriptionTH": "กองกลางจากแกมเบียที่มีแรงและพลังสูง กลายเป็นหนึ่งในดาวรุ่งที่น่าจับตาของ La Masia ในฤดูกาลนี้",
+    "jerseyNumber": null
+  }
+]
