@@ -36,7 +36,92 @@
   /* Borders */
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-glass: rgba(255, 255, 255, 0.12);
+
+  /* Admin accent (default matches barca) */
+  --admin-accent: #7C3AED;
+  --admin-accent-light: #A855F7;
+  --admin-accent-glow: rgba(168, 85, 247, 0.35);
 }
+
+/* ===================================================
+   CAMP NOU CLASSIC — Admin Theme (Light Mode)
+   Barcelona Navy Sidebar + White Main Area
+   Applied via .admin-theme on the admin layout root
+   =================================================== */
+.admin-theme {
+  /* Main content area — light / white */
+  --bg-dark:   #EFF3FB;      /* page background: cool off-white */
+  --surface:   #FFFFFF;      /* cards: pure white */
+  --surface-2: #F4F7FD;      /* secondary panels */
+  --surface-3: #E8EFF9;      /* inputs, table headers */
+  --surface-4: #D9E5F5;      /* hover/active */
+
+  /* Text — dark navy for readability on white */
+  --text-primary:   #0B1F40;
+  --text-secondary: #354875;
+  --text-muted:     #7A8FAD;
+
+  /* Borders — subtle navy tint */
+  --border-subtle: rgba(0, 77, 152, 0.10);
+  --border-glass:  rgba(0, 77, 152, 0.18);
+
+  /* Admin accent = Barça Crimson for CTAs */
+  --admin-accent:      #A2001D;
+  --admin-accent-light: #D4002A;
+  --admin-accent-glow: rgba(162, 0, 29, 0.3);
+}
+
+/* Glass: white frosted card */
+.admin-theme .glass {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(0, 77, 152, 0.12);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,77,152,0.05);
+}
+
+/* Dark glass: used in mobile drawers */
+.admin-theme .glass-dark {
+  background: rgba(0, 40, 100, 0.06);
+  border-color: rgba(0, 77, 152, 0.12);
+}
+
+/* -----------------------------------------------
+   Force dark text in admin main content area
+   Overrides hardcoded text-white utilities
+   ----------------------------------------------- */
+.admin-theme main h1,
+.admin-theme main h2,
+.admin-theme main h3,
+.admin-theme main h4,
+.admin-theme main strong {
+  color: var(--text-primary);
+}
+
+.admin-theme main input,
+.admin-theme main textarea,
+.admin-theme main select {
+  color: var(--text-primary);
+  border-color: var(--border-glass);
+  background-color: var(--surface-3);
+}
+
+.admin-theme main input::placeholder,
+.admin-theme main textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.admin-theme main input:focus,
+.admin-theme main textarea:focus,
+.admin-theme main select:focus {
+  border-color: var(--barca-gold);
+  outline: none;
+}
+
+/* Scrollbar — navy tint */
+.admin-theme ::-webkit-scrollbar-track  { background: #EAF0FB; }
+.admin-theme ::-webkit-scrollbar-thumb  { background: rgba(0,77,152,0.22); }
+.admin-theme ::-webkit-scrollbar-thumb:hover { background: #004D98; }
 
 body {
   background-color: var(--bg-dark);

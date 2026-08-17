@@ -302,7 +302,7 @@ export default function AdminPlayersList({ initialPlayers }: AdminPlayersListPro
                           )}
                         </div>
                         <div>
-                          <div className="text-white font-bold">{player.name}</div>
+                          <div className="text-[var(--text-primary)] font-bold">{player.name}</div>
                           <div className="text-[10px] text-[var(--text-muted)]">
                             เข้าปี {player.lamasiaYear}{" "}
                             {player.jerseyNumber ? `• #${player.jerseyNumber}` : ""}
@@ -406,7 +406,7 @@ export default function AdminPlayersList({ initialPlayers }: AdminPlayersListPro
                   {/* Player Info */}
                   <div className="px-3 pb-3 flex flex-col gap-2 flex-1">
                     <div className="text-center">
-                      <p className="text-white font-bold text-sm leading-tight truncate" title={player.name}>
+                      <p className="text-[var(--text-primary)] font-bold text-sm leading-tight truncate" title={player.name}>
                         {player.name}
                       </p>
                       <div className="flex items-center justify-center gap-1.5 mt-1">

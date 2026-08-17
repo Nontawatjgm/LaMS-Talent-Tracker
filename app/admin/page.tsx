@@ -31,7 +31,8 @@ export default async function AdminDashboard() {
         </div>
         <Link
           href="/admin/players/new"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--barca-navy)] hover:bg-[var(--barca-navy-light)] text-white text-sm font-bold transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white text-sm font-bold transition-colors shadow-md"
+          style={{ background: "linear-gradient(135deg, #A2001D, #D4002A)", boxShadow: "0 0 12px rgba(162,0,29,0.3)" }}
         >
           <span className="text-lg leading-none">+</span> เพิ่มนักเตะใหม่
         </Link>
@@ -45,7 +46,7 @@ export default async function AdminDashboard() {
             <h3 className="text-[var(--text-secondary)] font-medium text-sm">นักเตะทั้งหมด</h3>
             <span className="w-8 h-8 rounded-lg bg-[var(--surface-3)] flex items-center justify-center text-lg">👥</span>
           </div>
-          <p className="text-4xl font-display font-black text-white relative z-10">{totalPlayers}</p>
+          <p className="text-4xl font-display font-black text-[var(--text-primary)] relative z-10">{totalPlayers}</p>
         </div>
 
         <div className="glass p-5 rounded-2xl border border-white/10 relative overflow-hidden group">
@@ -116,7 +117,7 @@ export default async function AdminDashboard() {
           <div className="w-16 h-16 rounded-full bg-[var(--surface-3)] flex items-center justify-center text-2xl mb-4">
             🚧
           </div>
-          <h3 className="text-lg font-bold text-white mb-2">Supabase Integration</h3>
+          <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">Supabase Integration</h3>
           <p className="text-sm text-[var(--text-muted)] max-w-sm">
             Phase ถัดไป ระบบจะทำการเปลี่ยนแหล่งข้อมูล (Data Source) จากไฟล์ JSON เป็นฐานข้อมูล Supabase PostgreSQL
           </p>

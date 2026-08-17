@@ -19,7 +19,11 @@ export default async function AdminPlayersPage() {
         </div>
         <Link
           href="/admin/players/new"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--barca-navy)] hover:bg-[var(--barca-navy-light)] text-white text-sm font-bold transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-sm font-bold shadow-md hover:opacity-95 transition-all"
+          style={{
+            background: "linear-gradient(135deg, #A2001D, #D4002A)",
+            boxShadow: "0 2px 10px rgba(162, 0, 29, 0.25)",
+          }}
         >
           <span className="text-lg leading-none">+</span> เพิ่มนักเตะใหม่
         </Link>

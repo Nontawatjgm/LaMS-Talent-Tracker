@@ -210,7 +210,7 @@ export default function AdminStatsList({ initialPlayers }: AdminStatsListProps) 
                         )}
                       </div>
                       <div>
-                        <div className="text-white font-bold">{player.name}</div>
+                        <div className="text-[var(--text-primary)] font-bold">{player.name}</div>
                         <div className="text-[10px] text-[var(--text-muted)] flex items-center gap-1 mt-0.5">
                           <FlagIcon nationality={player.nationality} emoji={player.flagEmoji} /> เข้าปี {player.lamasiaYear}
                         </div>
