@@ -62,8 +62,14 @@ export default function CareerTimeline({ player }: CareerTimelineProps) {
       tag: "🌟 สถานะปัจจุบัน",
       title: player.currentStatus === "promoted"
         ? `ก้าวขึ้นสู่ทีมชุดใหญ่ FC Barcelona`
+        : player.currentStatus === "barca_atletic"
+        ? `สังกัดทีมสำรอง Barça Atlètic`
+        : player.currentStatus === "juvenil_a"
+        ? `สังกัดทีมเยาวชน Juvenil (U19)`
         : player.currentStatus === "loaned"
         ? `ยืมตัวเพื่อเก็บเกี่ยวประสบการณ์กับ ${player.currentClub || "สโมสรพันธมิตร"}`
+        : player.currentStatus === "transferred" || player.currentStatus === "sold"
+        ? `ย้ายไปร่วมทีม ${player.currentClub || "สโมสรอื่น"}`
         : player.currentStatus === "academy"
         ? `กำลังพัฒนาฝีเท้าในสังกัด La Masia / Barça Atlètic`
         : `สิ้นสุดสัญญากับสโมสร`,

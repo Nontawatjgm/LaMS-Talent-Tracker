@@ -34,6 +34,12 @@ export async function getPlayers(): Promise<Player[]> {
     height: p.height,
     jerseyNumber: p.jersey_number,
     currentClub: p.current_club,
+    imageUrl: p.image_url,
+    actionShotUrl: p.action_shot_url,
+    preferredFoot: p.preferred_foot,
+    marketValueM: p.market_value_m,
+    firstTeamDebutDate: p.first_team_debut_date,
+    socialInstagram: p.social_instagram,
     preSeasons: (p.preSeasons || []).map((ps: any) => ({
       year: ps.year,
       season: ps.season,
@@ -41,7 +47,8 @@ export async function getPlayers(): Promise<Player[]> {
       minutesPlayed: ps.minutes_played,
       goals: ps.goals,
       assists: ps.assists,
-      notes: ps.notes
+      notes: ps.notes,
+      tourLocation: ps.tour_location
     }))
   })) as Player[];
 }

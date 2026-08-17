@@ -10,13 +10,13 @@ export default async function AdminDashboard() {
   const players = await getPlayers();
   const totalPlayers = players.length;
   const promotedCount = players.filter(p => p.currentStatus === "promoted").length;
-  const academyCount = players.filter(p => p.currentStatus === "academy").length;
+  const reserveCount = players.filter(p => p.currentStatus === "barca_atletic" || p.currentStatus === "juvenil_a" || p.currentStatus === "academy").length;
   const loanedCount = players.filter(p => p.currentStatus === "loaned").length;
 
   const positions = {
-    FWD: players.filter(p => p.position === "FWD").length,
-    MID: players.filter(p => p.position === "MID").length,
-    DEF: players.filter(p => p.position === "DEF").length,
+    FWD: players.filter(p => ["ST", "LW", "RW", "FWD"].includes(p.position)).length,
+    MID: players.filter(p => ["CAM", "CM", "CDM", "MID"].includes(p.position)).length,
+    DEF: players.filter(p => ["CB", "LB", "RB", "DEF"].includes(p.position)).length,
     GK: players.filter(p => p.position === "GK").length,
   };
 
@@ -60,10 +60,10 @@ export default async function AdminDashboard() {
         <div className="glass p-5 rounded-2xl border border-white/10 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all" />
           <div className="flex items-center justify-between mb-4 relative z-10">
-            <h3 className="text-[var(--text-secondary)] font-medium text-sm">ทีมเยาวชน</h3>
+            <h3 className="text-[var(--text-secondary)] font-medium text-sm">Atlètic / U19</h3>
             <span className="w-8 h-8 rounded-lg bg-[var(--surface-3)] flex items-center justify-center text-lg">🎓</span>
           </div>
-          <p className="text-4xl font-display font-black text-purple-400 relative z-10">{academyCount}</p>
+          <p className="text-4xl font-display font-black text-purple-400 relative z-10">{reserveCount}</p>
         </div>
 
         <div className="glass p-5 rounded-2xl border border-white/10 relative overflow-hidden group">

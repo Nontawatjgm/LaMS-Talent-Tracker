@@ -20,10 +20,12 @@ const positions: { value: Position | "ALL"; label: string }[] = [
 
 const statuses: { value: Status | "ALL"; label: string }[] = [
   { value: "ALL", label: "ทุกสถานะ" },
-  { value: "promoted", label: "Promoted ✦" },
-  { value: "academy", label: "Academy ◈" },
+  { value: "promoted", label: "First Team ✦" },
+  { value: "barca_atletic", label: "Barça Atlètic ◈" },
+  { value: "juvenil_a", label: "Juvenil (U19) ❖" },
   { value: "loaned", label: "Loaned ↗" },
   { value: "released", label: "Released ×" },
+  { value: "transferred", label: "Transferred ⇆" },
 ];
 
 const seasonColors: Record<string, { bg: string; accent: string }> = {

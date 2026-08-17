@@ -4,21 +4,71 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/app/utils/supabase/server";
 
+import { getFlagEmoji } from "@/app/utils/flags";
+
 export async function createPlayer(formData: FormData) {
   const supabase = await createClient();
 
+  const name = formData.get("name") as string;
+  const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  const nationality = formData.get("nationality") as string;
+  const flag_emoji = getFlagEmoji(nationality);
+
+  const heightStr = formData.get("height") as string;
+  const jerseyStr = formData.get("jersey_number") as string;
+  const marketValueStr = formData.get("market_value_m") as string;
+
+  const safeParseInt = (str: string) => {
+    const val = parseInt(str);
+    return isNaN(val) ? null : val;
+  };
+  
+  const safeParseFloat = (str: string) => {
+    const val = parseFloat(str);
+    return isNaN(val) ? null : val;
+  };
+
+  const parseDateToISO = (dateStr: string | null | undefined): string | null => {
+    if (!dateStr || !dateStr.trim() || dateStr.trim() === "-") return null;
+    const str = dateStr.trim();
+    // Match DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY
+    const dmyMatch = str.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/);
+    if (dmyMatch) {
+      const day = dmyMatch[1].padStart(2, "0");
+      const month = dmyMatch[2].padStart(2, "0");
+      const year = dmyMatch[3];
+      return `${year}-${month}-${day}`;
+    }
+    // Match YYYY-MM-DD
+    const ymdMatch = str.match(/^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/);
+    if (ymdMatch) {
+      const year = ymdMatch[1];
+      const month = ymdMatch[2].padStart(2, "0");
+      const day = ymdMatch[3].padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+    return str;
+  };
+
   const playerData = {
-    name: formData.get("name") as string,
+    id,
+    name,
     position: formData.get("position") as string,
-    nationality: formData.get("nationality") as string,
-    flag_emoji: formData.get("flag_emoji") as string,
-    date_of_birth: formData.get("date_of_birth") as string,
+    nationality,
+    flag_emoji,
+    date_of_birth: parseDateToISO(formData.get("date_of_birth") as string) || "2000-01-01",
     lamasia_year: parseInt(formData.get("lamasia_year") as string),
-    height: formData.get("height") ? parseInt(formData.get("height") as string) : null,
-    jersey_number: formData.get("jersey_number") ? parseInt(formData.get("jersey_number") as string) : null,
+    height: safeParseInt(heightStr),
+    jersey_number: safeParseInt(jerseyStr),
     current_status: formData.get("current_status") as string,
     current_club: formData.get("current_club") as string || "FC Barcelona",
     description_th: formData.get("description_th") as string || null,
+    image_url: formData.get("image_url") as string || null,
+    action_shot_url: formData.get("action_shot_url") as string || null,
+    preferred_foot: formData.get("preferred_foot") as string || null,
+    market_value_m: safeParseFloat(marketValueStr),
+    first_team_debut_date: parseDateToISO(formData.get("first_team_debut_date") as string),
+    social_instagram: formData.get("social_instagram") as string || null,
   };
 
   const { data, error } = await supabase
@@ -43,18 +93,61 @@ export async function createPlayer(formData: FormData) {
 export async function updatePlayer(id: string, formData: FormData) {
   const supabase = await createClient();
 
+  const nationality = formData.get("nationality") as string;
+  const flag_emoji = getFlagEmoji(nationality);
+
+  const heightStr = formData.get("height") as string;
+  const jerseyStr = formData.get("jersey_number") as string;
+  const marketValueStr = formData.get("market_value_m") as string;
+
+  const safeParseInt = (str: string) => {
+    const val = parseInt(str);
+    return isNaN(val) ? null : val;
+  };
+  
+  const safeParseFloat = (str: string) => {
+    const val = parseFloat(str);
+    return isNaN(val) ? null : val;
+  };
+
+  const parseDateToISO = (dateStr: string | null | undefined): string | null => {
+    if (!dateStr || !dateStr.trim() || dateStr.trim() === "-") return null;
+    const str = dateStr.trim();
+    const dmyMatch = str.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/);
+    if (dmyMatch) {
+      const day = dmyMatch[1].padStart(2, "0");
+      const month = dmyMatch[2].padStart(2, "0");
+      const year = dmyMatch[3];
+      return `${year}-${month}-${day}`;
+    }
+    const ymdMatch = str.match(/^(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})$/);
+    if (ymdMatch) {
+      const year = ymdMatch[1];
+      const month = ymdMatch[2].padStart(2, "0");
+      const day = ymdMatch[3].padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+    return str;
+  };
+
   const playerData = {
     name: formData.get("name") as string,
     position: formData.get("position") as string,
-    nationality: formData.get("nationality") as string,
-    flag_emoji: formData.get("flag_emoji") as string,
-    date_of_birth: formData.get("date_of_birth") as string,
+    nationality,
+    flag_emoji,
+    date_of_birth: parseDateToISO(formData.get("date_of_birth") as string) || "2000-01-01",
     lamasia_year: parseInt(formData.get("lamasia_year") as string),
-    height: formData.get("height") ? parseInt(formData.get("height") as string) : null,
-    jersey_number: formData.get("jersey_number") ? parseInt(formData.get("jersey_number") as string) : null,
+    height: safeParseInt(heightStr),
+    jersey_number: safeParseInt(jerseyStr),
     current_status: formData.get("current_status") as string,
     current_club: formData.get("current_club") as string || "FC Barcelona",
     description_th: formData.get("description_th") as string || null,
+    image_url: formData.get("image_url") as string || null,
+    action_shot_url: formData.get("action_shot_url") as string || null,
+    preferred_foot: formData.get("preferred_foot") as string || null,
+    market_value_m: safeParseFloat(marketValueStr),
+    first_team_debut_date: parseDateToISO(formData.get("first_team_debut_date") as string),
+    social_instagram: formData.get("social_instagram") as string || null,
   };
 
   const { error } = await supabase

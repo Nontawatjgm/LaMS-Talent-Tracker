@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import type { Player, Position } from "@/types/player";
 import { PositionBadge, StatusBadge } from "./StatusBadge";
+import { FlagIcon } from "./FlagIcon";
 
 interface SearchModalProps {
   players: Player[];
@@ -109,7 +110,7 @@ export default function SearchModal({ players, isOpen, onClose }: SearchModalPro
             ref={inputRef}
             type="text"
             className="w-full bg-transparent text-white placeholder-[var(--text-muted)] text-base focus:outline-none"
-            placeholder="ค้นหาชื่อนักเตะ, ตำแหน่ง, สัญชาติ... (เช่น Lamine, Yamal, กองหลัง)"
+            placeholder="ค้นหาชื่อ, ตำแหน่ง, สัญชาติ..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -203,11 +204,14 @@ export default function SearchModal({ players, isOpen, onClose }: SearchModalPro
                             #{player.jerseyNumber}
                           </span>
                         )}
-                        <span className="text-xs">{player.flagEmoji}</span>
                       </div>
-                      <p className="text-xs text-[var(--text-muted)] truncate max-w-sm">
-                        เข้า La Masia ปี {player.lamasiaYear} · {player.nationality}
-                      </p>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <FlagIcon nationality={player.nationality} emoji={player.flagEmoji} className="h-3" />
+                        <span className="text-xs text-[var(--text-secondary)]">{player.nationality}</span>
+                        <p className="text-xs text-[var(--text-muted)] truncate max-w-sm">
+                          เข้า La Masia ปี {player.lamasiaYear}
+                        </p>
+                      </div>
                     </div>
                   </div>
 

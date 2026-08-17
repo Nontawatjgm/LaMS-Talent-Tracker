@@ -1,5 +1,5 @@
-export type Position = "GK" | "DEF" | "MID" | "FWD"
-export type Status = "promoted" | "loaned" | "released" | "academy"
+export type Position = "GK" | "CB" | "LB" | "RB" | "CDM" | "CM" | "CAM" | "LW" | "RW" | "ST" | "DEF" | "MID" | "FWD"
+export type Status = "promoted" | "barca_atletic" | "juvenil_a" | "loaned" | "released" | "transferred" | "sold" | "academy"
 
 export interface PreSeason {
   season: string         // "2024/25"
@@ -9,6 +9,7 @@ export interface PreSeason {
   goals?: number
   assists?: number
   notes?: string         // Thai description
+  tourLocation?: string
 }
 
 export interface Player {
@@ -25,6 +26,12 @@ export interface Player {
   currentClub?: string
   descriptionTH?: string // คำอธิบายภาษาไทย
   jerseyNumber?: number
+  imageUrl?: string
+  actionShotUrl?: string
+  preferredFoot?: "Right" | "Left" | "Both"
+  marketValueM?: number
+  firstTeamDebutDate?: string
+  socialInstagram?: string
 }
 
 export interface SeasonGroup {

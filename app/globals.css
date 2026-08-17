@@ -240,9 +240,12 @@ body {
 
 /* Status badge */
 .status-promoted { background: rgba(34, 197, 94, 0.12); color: #22C55E; border: 1px solid rgba(34, 197, 94, 0.3); }
+.status-atletic { background: rgba(0, 77, 152, 0.18); color: #60A5FA; border: 1px solid rgba(0, 77, 152, 0.4); }
+.status-juvenil { background: rgba(139, 92, 246, 0.15); color: #C084FC; border: 1px solid rgba(139, 92, 246, 0.35); }
 .status-academy { background: rgba(139, 92, 246, 0.12); color: #A78BFA; border: 1px solid rgba(139, 92, 246, 0.3); }
 .status-loaned { background: rgba(249, 115, 22, 0.12); color: #FB923C; border: 1px solid rgba(249, 115, 22, 0.3); }
 .status-released { background: rgba(239, 68, 68, 0.12); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+.status-transferred { background: rgba(156, 163, 175, 0.12); color: #9CA3AF; border: 1px solid rgba(156, 163, 175, 0.3); }
 
 /* Divider */
 .divider-barca {

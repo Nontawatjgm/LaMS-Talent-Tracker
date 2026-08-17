@@ -11,6 +11,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navItems = [
     { href: "/admin", label: "Dashboard", icon: "📊" },
     { href: "/admin/players", label: "จัดการนักเตะ", icon: "👥" },
+    { href: "/admin/stats", label: "จัดการสถิติพรีซีซั่น", icon: "📈" },
     { href: "/", label: "กลับสู่เว็บไซต์", icon: "🏠", external: true },
   ];
 

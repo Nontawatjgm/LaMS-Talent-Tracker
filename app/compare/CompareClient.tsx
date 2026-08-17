@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Player } from "@/types/player";
 import PlayerSelect from "@/app/components/PlayerSelect";
 import CompareStats from "@/app/components/CompareStats";
+import { FlagIcon } from "@/app/components/FlagIcon";
 import { StatusBadge, PositionBadge } from "@/app/components/StatusBadge";
 import Link from "next/link";
 
@@ -34,17 +35,23 @@ function PlayerProfileSummary({ player, alignRight = false }: { player: Player |
   return (
     <div className={`glass rounded-3xl p-6 md:p-8 flex flex-col gap-6 h-full border-t-4 ${alignRight ? 'border-t-[var(--barca-navy)]' : 'border-t-[var(--barca-crimson)]'}`}>
       <div className={`flex items-start gap-4 ${alignRight ? 'flex-row-reverse text-right' : ''}`}>
-        {/* Avatar Placeholder */}
-        <div className="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 border border-white/10"
-          style={{ background: alignRight ? 'var(--barca-navy)' : 'var(--barca-crimson)' }}>
-          <span className="font-display font-black text-2xl text-white opacity-80">{getInitials(player.name)}</span>
+        {/* Avatar */}
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 overflow-hidden"
+          style={{ background: player.imageUrl ? 'transparent' : (alignRight ? 'var(--barca-navy)' : 'var(--barca-crimson)') }}>
+          {player.imageUrl ? (
+            <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+          ) : (
+            <span className="font-display font-black text-2xl text-white opacity-80">{getInitials(player.name)}</span>
+          )}
         </div>
         
         <div className="flex-1">
           <h2 className="font-display font-black text-2xl md:text-3xl text-white mb-2">{player.name}</h2>
           <div className={`flex flex-wrap items-center gap-2 ${alignRight ? 'justify-end' : ''}`}>
             <PositionBadge position={player.position} />
-            <span className="text-sm">{player.flagEmoji} {player.nationality}</span>
+            <span className="flex items-center gap-1.5 text-sm">
+              <FlagIcon nationality={player.nationality} emoji={player.flagEmoji} /> {player.nationality}
+            </span>
           </div>
         </div>
       </div>

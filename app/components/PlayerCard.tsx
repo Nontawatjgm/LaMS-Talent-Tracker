@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Player } from "@/types/player";
 import { StatusBadge, PositionBadge } from "./StatusBadge";
+import { FlagIcon } from './FlagIcon';
 
 interface PlayerCardProps {
   player: Player;
@@ -73,18 +74,26 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
         {/* ─── Header row ─── */}
         <div className="flex items-start gap-3 relative">
           {/* Avatar */}
+          {/* Avatar */}
           <div
             className="w-14 h-14 rounded-xl shrink-0 flex items-center justify-center relative overflow-hidden"
-            style={{ background: getAvatarGradient(player.id) }}
+            style={{ background: player.imageUrl ? 'transparent' : getAvatarGradient(player.id) }}
           >
-            <span className="text-white font-bold text-lg font-display relative z-10">
-              {getInitials(player.name)}
-            </span>
-            {player.jerseyNumber && (
+            {player.imageUrl ? (
+              <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-white font-bold text-lg font-display relative z-10">
+                {getInitials(player.name)}
+              </span>
+            )}
+            
+            {!player.imageUrl && player.jerseyNumber && (
               <span className="absolute bottom-0.5 right-1 text-[9px] font-black opacity-35 text-white">
                 #{player.jerseyNumber}
               </span>
             )}
+            
+            {/* If using image, we can optionally overlay the jersey number if needed, but it might clutter it. Let's keep it simple. */}
           </div>
 
           {/* Name & info */}
@@ -93,10 +102,10 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
               {player.name}
             </h3>
             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-              <span className="text-[13px]">{player.flagEmoji}</span>
-              <span className="text-xs text-[var(--text-muted)]">
-                {player.nationality}
-              </span>
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 backdrop-blur-sm">
+                <FlagIcon nationality={player.nationality} emoji={player.flagEmoji} />
+                <span className="text-xs text-[var(--text-secondary)] font-medium">{player.nationality}</span>
+              </div>
               <span className="text-[var(--border-glass)] text-xs">·</span>
               <span className="text-xs text-[var(--text-muted)]">{age} ปี</span>
             </div>

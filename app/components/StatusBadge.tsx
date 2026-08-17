@@ -11,16 +11,29 @@ interface PositionBadgeProps {
 }
 
 const statusConfig: Record<Status, { label: string; className: string; icon: string }> = {
-  promoted: { label: "Promoted", className: "status-promoted", icon: "✦" },
-  academy: { label: "Academy", className: "status-academy", icon: "◈" },
+  promoted: { label: "First Team", className: "status-promoted", icon: "✦" },
+  barca_atletic: { label: "Barça Atlètic", className: "status-atletic", icon: "◈" },
+  juvenil_a: { label: "Juvenil (U19)", className: "status-juvenil", icon: "❖" },
+  academy: { label: "Barça Atlètic", className: "status-atletic", icon: "◈" },
   loaned: { label: "Loaned", className: "status-loaned", icon: "↗" },
   released: { label: "Released", className: "status-released", icon: "×" },
+  transferred: { label: "Transferred", className: "status-transferred", icon: "⇆" },
+  sold: { label: "Sold", className: "status-transferred", icon: "⇆" },
 };
 
 const positionConfig: Record<Position, { label: string; className: string }> = {
   GK: { label: "GK", className: "pos-gk" },
+  CB: { label: "CB", className: "pos-def" },
+  LB: { label: "LB", className: "pos-def" },
+  RB: { label: "RB", className: "pos-def" },
   DEF: { label: "DEF", className: "pos-def" },
+  CDM: { label: "CDM", className: "pos-mid" },
+  CM: { label: "CM", className: "pos-mid" },
+  CAM: { label: "CAM", className: "pos-mid" },
   MID: { label: "MID", className: "pos-mid" },
+  LW: { label: "LW", className: "pos-fwd" },
+  RW: { label: "RW", className: "pos-fwd" },
+  ST: { label: "ST", className: "pos-fwd" },
   FWD: { label: "FWD", className: "pos-fwd" },
 };
 
