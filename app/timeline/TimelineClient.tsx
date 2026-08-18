@@ -170,10 +170,10 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
               id="filter-position"
               value={selectedPosition}
               onChange={(e) => setSelectedPosition(e.target.value as Position | "ALL")}
-              className="px-3 py-2.5 rounded-xl bg-[var(--surface-3)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-sm focus:outline-none focus:border-[var(--barca-navy)] transition-colors"
+              className="dark-select py-2 px-3 text-xs"
             >
               {positions.map((p) => (
-                <option key={p.value} value={p.value}>{p.label}</option>
+                <option key={p.value} value={p.value} className="bg-[var(--surface-3)] text-white">{p.label}</option>
               ))}
             </select>
 
@@ -182,10 +182,10 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
               id="filter-status"
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value as Status | "ALL")}
-              className="px-3 py-2.5 rounded-xl bg-[var(--surface-3)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-sm focus:outline-none focus:border-[var(--barca-navy)] transition-colors"
+              className="dark-select py-2 px-3 text-xs"
             >
               {statuses.map((s) => (
-                <option key={s.value} value={s.value}>{s.label}</option>
+                <option key={s.value} value={s.value} className="bg-[var(--surface-3)] text-white">{s.label}</option>
               ))}
             </select>
           </div>

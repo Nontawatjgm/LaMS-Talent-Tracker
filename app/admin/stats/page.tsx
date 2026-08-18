@@ -16,8 +16,8 @@ export default async function AdminStatsOverviewPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-display font-bold text-white">เลือกลงสถิติพรีซีซั่น</h1>
-          <p className="text-sm text-[var(--text-muted)] mt-1">
+          <h1 className="text-2xl font-display font-bold text-[var(--text-primary)]">เลือกลงสถิติพรีซีซั่น</h1>
+          <p className="text-xs text-[var(--text-muted)] mt-1">
             เลือกนักเตะเยาวชนเพื่อจัดการสถิติ ({academyPlayers.length} คนที่ยังไม่ขึ้นชุดใหญ่)
           </p>
         </div>

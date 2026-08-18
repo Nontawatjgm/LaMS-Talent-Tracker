@@ -32,9 +32,33 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pageInfo = getPageInfo(pathname);
 
   const navItems = [
-    { href: "/admin", label: "Dashboard", icon: "📊" },
-    { href: "/admin/players", label: "จัดการนักเตะ", icon: "👥" },
-    { href: "/admin/stats", label: "จัดการสถิติพรีซีซั่น", icon: "📈" },
+    {
+      href: "/admin",
+      label: "Dashboard",
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 12a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1v-7z" />
+        </svg>
+      ),
+    },
+    {
+      href: "/admin/players",
+      label: "จัดการนักเตะ",
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+    },
+    {
+      href: "/admin/stats",
+      label: "จัดการสถิติพรีซีซั่น",
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      ),
+    },
   ];
 
   return (
@@ -83,7 +107,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             onClick={() => setIsSidebarOpen(false)}
             className="md:hidden text-white/70 hover:text-white p-1 rounded-lg"
           >
-            ✕
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
@@ -137,7 +163,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     style={{ background: "#EDBB00" }}
                   />
                 )}
-                <span className="text-sm shrink-0">{item.icon}</span>
+                <span className="shrink-0 opacity-85">{item.icon}</span>
                 <span className="truncate">{item.label}</span>
                 {isActive && (
                   <div
@@ -168,7 +194,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.6)";
             }}
           >
-            <span className="text-sm shrink-0">🌐</span>
+            <svg className="w-4 h-4 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
             <span className="truncate">กลับสู่หน้าหลักแฟนบอล</span>
           </Link>
         </nav>
@@ -249,7 +277,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 boxShadow: "0 2px 8px rgba(162,0,29,0.25)",
               }}
             >
-              <span className="text-sm leading-none">+</span>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
               <span className="hidden xs:inline">เพิ่มนักเตะ</span>
             </Link>
 
@@ -259,7 +289,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EFF3FB] hover:bg-[#E8EFF9] text-xs font-semibold text-[#354875] border border-[#004D98]/12 transition-all"
               title="เปิดดูหน้าหลักของแฟนบอล"
             >
-              <span>🌐</span>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
               <span className="hidden sm:inline">ดูหน้าเว็บ</span>
             </Link>
           </div>
