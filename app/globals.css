@@ -36,7 +36,92 @@
   /* Borders */
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-glass: rgba(255, 255, 255, 0.12);
+
+  /* Admin accent (default matches barca) */
+  --admin-accent: #7C3AED;
+  --admin-accent-light: #A855F7;
+  --admin-accent-glow: rgba(168, 85, 247, 0.35);
 }
+
+/* ===================================================
+   CAMP NOU CLASSIC — Admin Theme (Light Mode)
+   Barcelona Navy Sidebar + White Main Area
+   Applied via .admin-theme on the admin layout root
+   =================================================== */
+.admin-theme {
+  /* Main content area — light / white */
+  --bg-dark:   #EFF3FB;      /* page background: cool off-white */
+  --surface:   #FFFFFF;      /* cards: pure white */
+  --surface-2: #F4F7FD;      /* secondary panels */
+  --surface-3: #E8EFF9;      /* inputs, table headers */
+  --surface-4: #D9E5F5;      /* hover/active */
+
+  /* Text — dark navy for readability on white */
+  --text-primary:   #0B1F40;
+  --text-secondary: #354875;
+  --text-muted:     #7A8FAD;
+
+  /* Borders — subtle navy tint */
+  --border-subtle: rgba(0, 77, 152, 0.10);
+  --border-glass:  rgba(0, 77, 152, 0.18);
+
+  /* Admin accent = Barça Crimson for CTAs */
+  --admin-accent:      #A2001D;
+  --admin-accent-light: #D4002A;
+  --admin-accent-glow: rgba(162, 0, 29, 0.3);
+}
+
+/* Glass: white frosted card */
+.admin-theme .glass {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(0, 77, 152, 0.12);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,77,152,0.05);
+}
+
+/* Dark glass: used in mobile drawers */
+.admin-theme .glass-dark {
+  background: rgba(0, 40, 100, 0.06);
+  border-color: rgba(0, 77, 152, 0.12);
+}
+
+/* -----------------------------------------------
+   Force dark text in admin main content area
+   Overrides hardcoded text-white utilities
+   ----------------------------------------------- */
+.admin-theme main h1,
+.admin-theme main h2,
+.admin-theme main h3,
+.admin-theme main h4,
+.admin-theme main strong {
+  color: var(--text-primary);
+}
+
+.admin-theme main input,
+.admin-theme main textarea,
+.admin-theme main select {
+  color: var(--text-primary);
+  border-color: var(--border-glass);
+  background-color: var(--surface-3);
+}
+
+.admin-theme main input::placeholder,
+.admin-theme main textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.admin-theme main input:focus,
+.admin-theme main textarea:focus,
+.admin-theme main select:focus {
+  border-color: var(--barca-gold);
+  outline: none;
+}
+
+/* Scrollbar — navy tint */
+.admin-theme ::-webkit-scrollbar-track  { background: #EAF0FB; }
+.admin-theme ::-webkit-scrollbar-thumb  { background: rgba(0,77,152,0.22); }
+.admin-theme ::-webkit-scrollbar-thumb:hover { background: #004D98; }
 
 body {
   background-color: var(--bg-dark);
@@ -233,19 +318,19 @@ body {
 }
 
 /* Position badge colors */
-.pos-gk { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid rgba(16, 185, 129, 0.3); }
-.pos-def { background: rgba(0, 77, 152, 0.15); color: #60A5FA; border: 1px solid rgba(0, 77, 152, 0.4); }
-.pos-mid { background: rgba(237, 187, 0, 0.12); color: #FBB414; border: 1px solid rgba(237, 187, 0, 0.3); }
-.pos-fwd { background: rgba(162, 0, 29, 0.15); color: #F87171; border: 1px solid rgba(162, 0, 29, 0.35); }
+.pos-gk { background: #FFFFFF; color: #B45309; border: 1px solid rgba(237, 187, 0, 0.45); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.pos-def { background: #FFFFFF; color: #6D28D9; border: 1px solid rgba(124, 58, 237, 0.4); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.pos-mid { background: #FFFFFF; color: #004D98; border: 1px solid rgba(0, 77, 152, 0.35); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.pos-fwd { background: #FFFFFF; color: #A2001D; border: 1px solid rgba(162, 0, 29, 0.35); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
 
 /* Status badge */
-.status-promoted { background: rgba(34, 197, 94, 0.12); color: #22C55E; border: 1px solid rgba(34, 197, 94, 0.3); }
-.status-atletic { background: rgba(0, 77, 152, 0.18); color: #60A5FA; border: 1px solid rgba(0, 77, 152, 0.4); }
-.status-juvenil { background: rgba(139, 92, 246, 0.15); color: #C084FC; border: 1px solid rgba(139, 92, 246, 0.35); }
-.status-academy { background: rgba(139, 92, 246, 0.12); color: #A78BFA; border: 1px solid rgba(139, 92, 246, 0.3); }
-.status-loaned { background: rgba(249, 115, 22, 0.12); color: #FB923C; border: 1px solid rgba(249, 115, 22, 0.3); }
-.status-released { background: rgba(239, 68, 68, 0.12); color: #F87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-.status-transferred { background: rgba(156, 163, 175, 0.12); color: #9CA3AF; border: 1px solid rgba(156, 163, 175, 0.3); }
+.status-promoted { background: linear-gradient(white, white) padding-box, linear-gradient(90deg, #A2001D, #004D98) border-box; border: 1.25px solid transparent; color: #004D98; font-weight: 800; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.status-atletic { background: #FFFFFF; color: #004D98; border: 1px solid rgba(0, 77, 152, 0.35); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.status-juvenil { background: #FFFFFF; color: #6D28D9; border: 1px solid rgba(124, 58, 237, 0.4); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.status-academy { background: #FFFFFF; color: #004D98; border: 1px solid rgba(0, 77, 152, 0.35); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.status-loaned { background: #FFFFFF; color: #B45309; border: 1px solid rgba(245, 158, 11, 0.45); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.status-released { background: #FFFFFF; color: #BE123C; border: 1px solid rgba(244, 63, 94, 0.4); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.status-transferred { background: #FFFFFF; color: #334155; border: 1px solid rgba(148, 163, 184, 0.5); font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
 
 /* Divider */
 .divider-barca {
@@ -264,3 +349,105 @@ body {
   font-weight: 600;
   color: var(--text-secondary);
 }
+
+/* ===================================================
+   UNIFIED DROPDOWN (SELECT) DESIGN SYSTEM
+   =================================================== */
+
+/* Compact Filter Select (Admin light mode) */
+.admin-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23354875' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.75' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.65rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.1em 1.1em !important;
+  padding-right: 2.15rem !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid rgba(0, 77, 152, 0.15) !important;
+  color: #0B1F40 !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.admin-select:hover {
+  border-color: rgba(0, 77, 152, 0.35) !important;
+  background-color: #F8FAFD !important;
+}
+
+.admin-select:focus {
+  outline: none !important;
+  border-color: #004D98 !important;
+  box-shadow: 0 0 0 3px rgba(0, 77, 152, 0.12) !important;
+  background-color: #FFFFFF !important;
+}
+
+/* Full Form Input Select (Admin light mode) */
+.admin-select-form {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23354875' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.75' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.85rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.2em 1.2em !important;
+  padding-right: 2.5rem !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid rgba(0, 77, 152, 0.15) !important;
+  color: #0B1F40 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.admin-select-form:hover {
+  border-color: rgba(0, 77, 152, 0.35) !important;
+  background-color: #F8FAFD !important;
+}
+
+.admin-select-form:focus {
+  outline: none !important;
+  border-color: #004D98 !important;
+  box-shadow: 0 0 0 3px rgba(0, 77, 152, 0.12) !important;
+  background-color: #FFFFFF !important;
+}
+
+/* Frontend Dark Mode Select */
+.dark-select {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394A3B8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.75' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.75rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.15em 1.15em !important;
+  padding-right: 2.25rem !important;
+  background-color: var(--surface-3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  border-radius: 0.75rem !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+}
+
+.dark-select:hover {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  background-color: var(--surface-4) !important;
+}
+
+.dark-select:focus {
+  outline: none !important;
+  border-color: var(--barca-gold) !important;
+  box-shadow: 0 0 0 3px rgba(237, 187, 0, 0.15) !important;
+}
+

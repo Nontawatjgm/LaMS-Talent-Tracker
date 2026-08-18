@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 };
 
 import { getPlayers } from "./utils/supabase/queries";
+import { ToastProvider } from "./components/Toast";
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const players = await getPlayers();
@@ -39,9 +40,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${outfit.variable}`}
     >
       <body className="min-h-screen flex flex-col bg-[var(--bg-dark)] text-[var(--text-primary)] antialiased">
-        <Navbar players={players} />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <ToastProvider>
+          <Navbar players={players} />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </ToastProvider>
       </body>
     </html>
   );

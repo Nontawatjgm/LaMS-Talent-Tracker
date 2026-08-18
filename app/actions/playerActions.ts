@@ -5,11 +5,18 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/app/utils/supabase/server";
 
 import { getFlagEmoji } from "@/app/utils/flags";
+import { validatePlayerForm } from "@/app/utils/validation";
 
 export async function createPlayer(formData: FormData) {
+  const validation = validatePlayerForm(formData);
+  if (!validation.isValid) {
+    const errorMsg = Object.values(validation.errors).join(", ");
+    throw new Error(`ข้อมูลไม่ถูกต้อง: ${errorMsg}`);
+  }
+
   const supabase = await createClient();
 
-  const name = formData.get("name") as string;
+  const name = (formData.get("name") as string).trim();
   const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
   const nationality = formData.get("nationality") as string;
   const flag_emoji = getFlagEmoji(nationality);
@@ -61,14 +68,14 @@ export async function createPlayer(formData: FormData) {
     height: safeParseInt(heightStr),
     jersey_number: safeParseInt(jerseyStr),
     current_status: formData.get("current_status") as string,
-    current_club: formData.get("current_club") as string || "FC Barcelona",
-    description_th: formData.get("description_th") as string || null,
-    image_url: formData.get("image_url") as string || null,
-    action_shot_url: formData.get("action_shot_url") as string || null,
-    preferred_foot: formData.get("preferred_foot") as string || null,
+    current_club: (formData.get("current_club") as string)?.trim() || "FC Barcelona",
+    description_th: (formData.get("description_th") as string)?.trim() || null,
+    image_url: (formData.get("image_url") as string)?.trim() || null,
+    action_shot_url: (formData.get("action_shot_url") as string)?.trim() || null,
+    preferred_foot: (formData.get("preferred_foot") as string)?.trim() || null,
     market_value_m: safeParseFloat(marketValueStr),
     first_team_debut_date: parseDateToISO(formData.get("first_team_debut_date") as string),
-    social_instagram: formData.get("social_instagram") as string || null,
+    social_instagram: (formData.get("social_instagram") as string)?.trim() || null,
   };
 
   const { data, error } = await supabase
@@ -87,10 +94,16 @@ export async function createPlayer(formData: FormData) {
   revalidatePath("/admin/players");
   revalidatePath("/timeline");
   
-  redirect("/admin/players");
+  redirect(`/admin/players?toast=created&name=${encodeURIComponent(name)}`);
 }
 
 export async function updatePlayer(id: string, formData: FormData) {
+  const validation = validatePlayerForm(formData);
+  if (!validation.isValid) {
+    const errorMsg = Object.values(validation.errors).join(", ");
+    throw new Error(`ข้อมูลไม่ถูกต้อง: ${errorMsg}`);
+  }
+
   const supabase = await createClient();
 
   const nationality = formData.get("nationality") as string;
@@ -131,7 +144,7 @@ export async function updatePlayer(id: string, formData: FormData) {
   };
 
   const playerData = {
-    name: formData.get("name") as string,
+    name: (formData.get("name") as string).trim(),
     position: formData.get("position") as string,
     nationality,
     flag_emoji,
@@ -140,14 +153,14 @@ export async function updatePlayer(id: string, formData: FormData) {
     height: safeParseInt(heightStr),
     jersey_number: safeParseInt(jerseyStr),
     current_status: formData.get("current_status") as string,
-    current_club: formData.get("current_club") as string || "FC Barcelona",
-    description_th: formData.get("description_th") as string || null,
-    image_url: formData.get("image_url") as string || null,
-    action_shot_url: formData.get("action_shot_url") as string || null,
-    preferred_foot: formData.get("preferred_foot") as string || null,
+    current_club: (formData.get("current_club") as string)?.trim() || "FC Barcelona",
+    description_th: (formData.get("description_th") as string)?.trim() || null,
+    image_url: (formData.get("image_url") as string)?.trim() || null,
+    action_shot_url: (formData.get("action_shot_url") as string)?.trim() || null,
+    preferred_foot: (formData.get("preferred_foot") as string)?.trim() || null,
     market_value_m: safeParseFloat(marketValueStr),
     first_team_debut_date: parseDateToISO(formData.get("first_team_debut_date") as string),
-    social_instagram: formData.get("social_instagram") as string || null,
+    social_instagram: (formData.get("social_instagram") as string)?.trim() || null,
   };
 
   const { error } = await supabase
@@ -166,7 +179,7 @@ export async function updatePlayer(id: string, formData: FormData) {
   revalidatePath(`/players/${id}`);
   revalidatePath("/timeline");
   
-  redirect("/admin/players");
+  redirect(`/admin/players?toast=updated&name=${encodeURIComponent(playerData.name)}`);
 }
 
 export async function deletePlayer(id: string) {

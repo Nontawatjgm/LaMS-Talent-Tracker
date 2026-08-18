@@ -4,94 +4,310 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+function getPageInfo(pathname: string): { title: string; subtitle?: string } {
+  if (pathname === "/admin") {
+    return { title: "Dashboard Overview", subtitle: "ภาพรวมระบบและข้อมูลสถิติทั่วไป" };
+  }
+  if (pathname === "/admin/players/new") {
+    return { title: "เพิ่มนักเตะใหม่", subtitle: "กรอกข้อมูลดาวรุ่ง La Masia เข้าสู่ระบบ" };
+  }
+  if (pathname.includes("/edit")) {
+    return { title: "แก้ไขข้อมูลนักเตะ", subtitle: "ปรับปรุงรายละเอียดและสถิติส่วนบุคคล" };
+  }
+  if (pathname.includes("/stats/new")) {
+    return { title: "เพิ่มสถิติพรีซีซั่น", subtitle: "บันทึกผลงานช่วงทัวร์อุ่นเครื่อง" };
+  }
+  if (pathname.includes("/stats")) {
+    return { title: "จัดการสถิติพรีซีซั่น", subtitle: "บันทึกและแก้ไขสถิติการลงสนาม" };
+  }
+  if (pathname === "/admin/players") {
+    return { title: "จัดการข้อมูลนักเตะ", subtitle: "รายชื่อนักเตะทั้งหมดในระบบ La Masia" };
+  }
+  return { title: "Admin Console", subtitle: "ระบบจัดการข้อมูล" };
+}
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pageInfo = getPageInfo(pathname);
 
   const navItems = [
-    { href: "/admin", label: "Dashboard", icon: "📊" },
-    { href: "/admin/players", label: "จัดการนักเตะ", icon: "👥" },
-    { href: "/admin/stats", label: "จัดการสถิติพรีซีซั่น", icon: "📈" },
-    { href: "/", label: "กลับสู่เว็บไซต์", icon: "🏠", external: true },
+    {
+      href: "/admin",
+      label: "Dashboard",
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 12a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1v-7z" />
+        </svg>
+      ),
+    },
+    {
+      href: "/admin/players",
+      label: "จัดการนักเตะ",
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+    },
+    {
+      href: "/admin/stats",
+      label: "จัดการสถิติพรีซีซั่น",
+      icon: (
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      ),
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-[#06060F] flex flex-col md:flex-row font-sans text-white pt-[72px]">
-      {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-[var(--surface)] border-b border-white/10 z-20">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--barca-crimson)] to-[var(--barca-navy)] flex items-center justify-center font-display font-bold text-sm">
-            LM
-          </div>
-          <span className="font-display font-bold text-lg">Admin Panel</span>
-        </div>
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 bg-[var(--surface-2)] rounded-lg text-white"
-        >
-          {isSidebarOpen ? "✕" : "☰"}
-        </button>
-      </div>
-
-      {/* Sidebar Navigation */}
+    <div
+      className="admin-theme min-h-screen flex font-sans"
+      style={{ backgroundColor: "var(--bg-dark)", color: "var(--text-primary)" }}
+    >
+      {/* ========================================================
+          1. FULL-HEIGHT SIDEBAR (Left Column - 100vh Sticky)
+          Compact Width (w-56 = 224px)
+         ======================================================== */}
       <aside
-        className={`fixed md:sticky top-[72px] left-0 h-[calc(100vh-72px)] w-64 bg-[var(--surface)] border-r border-white/10 flex flex-col transition-transform duration-300 z-10 md:translate-x-0 ${
+        className={`fixed md:sticky top-0 left-0 h-screen w-56 flex flex-col transition-transform duration-300 z-40 shrink-0 md:translate-x-0 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{
+          backgroundColor: "#002D64",
+          borderRight: "1px solid rgba(255,255,255,0.08)",
+        }}
       >
-        <div className="p-6 hidden md:flex items-center gap-3 border-b border-white/10">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--barca-crimson)] to-[var(--barca-navy)] flex items-center justify-center font-display font-bold text-base shadow-lg shadow-[var(--barca-crimson)]/20">
-            LM
-          </div>
-          <div>
-            <h1 className="font-display font-bold text-lg leading-tight">La Masia</h1>
-            <p className="text-[10px] text-[var(--text-muted)] tracking-widest uppercase">Admin Panel</p>
-          </div>
+        {/* Brand Header */}
+        <div
+          className="h-16 px-4 flex items-center justify-between"
+          style={{ borderBottom: "1px solid rgba(255,255,255,0.1)" }}
+        >
+          <Link href="/admin" className="flex items-center gap-2.5 group">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center font-display font-bold text-xs text-white shadow-lg transition-transform group-hover:scale-105 shrink-0"
+              style={{
+                background: "linear-gradient(135deg, #A2001D 0%, #004D98 100%)",
+                boxShadow: "0 0 14px rgba(162, 0, 29, 0.4)",
+              }}
+            >
+              LM
+            </div>
+            <div className="overflow-hidden">
+              <h1 className="font-display font-bold text-sm leading-tight text-white truncate">La Masia</h1>
+              <p className="text-[9px] tracking-wider uppercase font-mono font-bold text-[#EDBB00]">
+                Admin Console
+              </p>
+            </div>
+          </Link>
+
+          {/* Close button on mobile drawer */}
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="md:hidden text-white/70 hover:text-white p-1 rounded-lg"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
 
-        <nav className="flex-1 px-4 py-6 flex flex-col gap-2">
+        {/* Section: Main Menu */}
+        <div className="px-4 pt-5 pb-1.5">
+          <p className="text-[10px] uppercase tracking-wider font-semibold text-white/35">เมนูจัดการ</p>
+        </div>
+
+        {/* Nav Items */}
+        <nav className="flex-1 px-2.5 flex flex-col gap-1 overflow-y-auto">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href) && !item.external);
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/admin" && pathname.startsWith(item.href));
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 relative"
+                style={
                   isActive
-                    ? "bg-[var(--surface-3)] text-white shadow-md border border-white/10"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--surface-2)] hover:text-white"
-                }`}
+                    ? {
+                        backgroundColor: "rgba(255,255,255,0.14)",
+                        color: "#FFFFFF",
+                        border: "1px solid rgba(255,255,255,0.18)",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+                      }
+                    : {
+                        color: "rgba(255,255,255,0.65)",
+                        border: "1px solid transparent",
+                      }
+                }
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.08)";
+                    (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.95)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = "";
+                    (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.65)";
+                  }
+                }}
               >
-                <span className="text-lg">{item.icon}</span>
-                {item.label}
+                {/* Active Gold Left Indicator Bar */}
+                {isActive && (
+                  <div
+                    className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full"
+                    style={{ background: "#EDBB00" }}
+                  />
+                )}
+                <span className="shrink-0 opacity-85">{item.icon}</span>
+                <span className="truncate">{item.label}</span>
+                {isActive && (
+                  <div
+                    className="ml-auto w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ background: "#EDBB00" }}
+                  />
+                )}
               </Link>
             );
           })}
+
+          {/* Section Separator */}
+          <div className="my-3 h-px" style={{ background: "rgba(255,255,255,0.08)" }} />
+          <p className="px-3 mb-1 text-[10px] uppercase tracking-wider font-semibold text-white/35">พอร์ทัล</p>
+
+          {/* Back to website button */}
+          <Link
+            href="/"
+            onClick={() => setIsSidebarOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200"
+            style={{ color: "rgba(255,255,255,0.6)", border: "1px solid transparent" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,255,255,0.08)";
+              (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.95)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "";
+              (e.currentTarget as HTMLElement).style.color = "rgba(255,255,255,0.6)";
+            }}
+          >
+            <svg className="w-4 h-4 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <span className="truncate">กลับสู่หน้าหลักแฟนบอล</span>
+          </Link>
         </nav>
 
-        <div className="p-4 border-t border-white/10">
-          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[var(--surface-2)] border border-white/5">
-            <div className="w-8 h-8 rounded-full bg-[var(--barca-gold)] flex items-center justify-center text-[#06060F] font-bold text-sm">
+        {/* Admin Profile Footer */}
+        <div className="p-3" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+          <div
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl"
+            style={{ backgroundColor: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.1)" }}
+          >
+            <div
+              className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-[10px] shadow-sm shrink-0"
+              style={{
+                background: "linear-gradient(135deg, #A2001D, #D4002A)",
+                boxShadow: "0 0 8px rgba(162,0,29,0.3)",
+              }}
+            >
               AD
             </div>
-            <div>
-              <p className="text-sm font-bold text-white">Administrator</p>
-              <p className="text-[10px] text-[var(--text-muted)]">Mock User Mode</p>
+            <div className="overflow-hidden">
+              <p className="text-xs font-bold text-white truncate">Administrator</p>
+              <p className="text-[9px] text-[#EDBB00]/80">Mock User Mode</p>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 p-4 md:p-8 overflow-y-auto w-full max-w-[100vw]">
-        {children}
-      </main>
+      {/* ========================================================
+          2. RIGHT COLUMN (Top Header Bar + Main Content Canvas)
+         ======================================================== */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        {/* Top Header Bar — Clean & Non-redundant */}
+        <header
+          className="h-16 px-4 md:px-8 flex items-center justify-between sticky top-0 z-30 shadow-sm transition-all"
+          style={{
+            backgroundColor: "#FFFFFF",
+            borderBottom: "1px solid rgba(0, 77, 152, 0.08)",
+          }}
+        >
+          {/* Left: Mobile Toggle + Page Breadcrumb & Title */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="md:hidden p-2 rounded-xl text-[#0B1F40] bg-[#EFF3FB] border border-[#004D98]/10 hover:bg-[#E8EFF9] transition-colors"
+              aria-label="Open navigation menu"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            {/* Breadcrumb Info */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-md bg-[#004D98]/8 text-[#004D98]">
+                Admin
+              </span>
+              <span className="text-[#7A8FAD] text-xs">/</span>
+              <span className="text-sm font-bold text-[#0B1F40] truncate">
+                {pageInfo.title}
+              </span>
+            </div>
+          </div>
+
+          {/* Right: Live DB Status + Quick Actions + Back Link */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Live DB Indicator */}
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Live DB</span>
+            </div>
+
+            {/* Quick Add Player Shortcut */}
+            <Link
+              href="/admin/players/new"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-white text-xs font-bold shadow-sm hover:opacity-95 transition-all"
+              style={{
+                background: "linear-gradient(135deg, #A2001D, #D4002A)",
+                boxShadow: "0 2px 8px rgba(162,0,29,0.25)",
+              }}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              <span className="hidden xs:inline">เพิ่มนักเตะ</span>
+            </Link>
+
+            {/* View Website Shortcut */}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EFF3FB] hover:bg-[#E8EFF9] text-xs font-semibold text-[#354875] border border-[#004D98]/12 transition-all"
+              title="เปิดดูหน้าหลักของแฟนบอล"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              <span className="hidden sm:inline">ดูหน้าเว็บ</span>
+            </Link>
+          </div>
+        </header>
+
+        {/* Main Content Area */}
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+          {children}
+        </main>
+      </div>
 
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-0 md:hidden backdrop-blur-sm"
+          className="fixed inset-0 z-30 md:hidden backdrop-blur-sm"
+          style={{ backgroundColor: "rgba(0, 20, 60, 0.5)" }}
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
