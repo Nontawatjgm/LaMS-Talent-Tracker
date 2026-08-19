@@ -1,10 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import type { Player, Position, Status } from "@/types/player";
 import PlayerCard from "@/app/components/PlayerCard";
 
 export default function TimelineClient({ players }: { players: Player[] }) {
+  const searchParams = useSearchParams();
+
   // Build seasons list
   const allSeasons = [
     ...new Set(players.flatMap((p) => (p.preSeasons || []).map((ps) => ps.season))),
@@ -35,10 +39,42 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
   "2023/24": { bg: "rgba(237, 187, 0, 0.08)", accent: "#EDBB00" },
 };
 
-  const [selectedSeason, setSelectedSeason] = useState<string>("ALL");
-  const [selectedPosition, setSelectedPosition] = useState<Position | "ALL">("ALL");
-  const [selectedStatus, setSelectedStatus] = useState<Status | "ALL">("ALL");
-  const [searchQuery, setSearchQuery] = useState("");
+  const initialStatus = (searchParams.get("status") as Status) || "ALL";
+  const initialSeason = searchParams.get("season") || "ALL";
+  const initialPos = (searchParams.get("position") as Position) || "ALL";
+  const initialQ = searchParams.get("q") || "";
+
+  const [selectedSeason, setSelectedSeason] = useState<string>(initialSeason);
+  const [selectedPosition, setSelectedPosition] = useState<Position | "ALL">(initialPos);
+  const [selectedStatus, setSelectedStatus] = useState<Status | "ALL">(initialStatus);
+  const [searchQuery, setSearchQuery] = useState(initialQ);
+
+  // Sync state if URL query params change (e.g. user navigates from homepage links)
+  useEffect(() => {
+    const statusParam = searchParams.get("status") as Status | null;
+    if (statusParam && (statuses.some(s => s.value === statusParam))) {
+      setSelectedStatus(statusParam);
+    } else if (!statusParam) {
+      setSelectedStatus("ALL");
+    }
+
+    const seasonParam = searchParams.get("season");
+    if (seasonParam && (seasonParam === "ALL" || allSeasons.includes(seasonParam))) {
+      setSelectedSeason(seasonParam);
+    } else if (!seasonParam) {
+      setSelectedSeason("ALL");
+    }
+
+    const posParam = searchParams.get("position") as Position | null;
+    if (posParam && (positions.some(p => p.value === posParam))) {
+      setSelectedPosition(posParam);
+    }
+
+    const qParam = searchParams.get("q");
+    if (qParam !== null) {
+      setSearchQuery(qParam);
+    }
+  }, [searchParams, allSeasons]);
 
   const filteredBySeason = useMemo(() => {
     if (selectedSeason === "ALL") return players;
@@ -67,11 +103,15 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
       .map((season) => ({
         season,
         players: filteredPlayers.filter((p) =>
-          p.preSeasons.some((ps) => ps.season === season)
+          p.preSeasons && p.preSeasons.some((ps) => ps.season === season)
         ),
       }))
       .filter((group) => group.players.length > 0);
   }, [filteredPlayers, selectedSeason]);
+
+  const playersWithoutPreseason = useMemo(() => {
+    return filteredPlayers.filter((p) => !p.preSeasons || p.preSeasons.length === 0);
+  }, [filteredPlayers]);
 
   return (
     <div className="min-h-screen pb-16">
@@ -190,11 +230,47 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
             </select>
           </div>
 
-          {/* Result count */}
-          <div className="mt-3 px-1 text-xs text-[var(--text-muted)]">
-            พบ{" "}
-            <span className="text-white font-semibold">{filteredPlayers.length}</span>{" "}
-            นักเตะ
+          {/* Result count & Active Filter Pills */}
+          <div className="mt-3 px-1 flex items-center justify-between flex-wrap gap-2 text-xs text-[var(--text-muted)]">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span>
+                พบ <span className="text-white font-semibold">{filteredPlayers.length}</span> นักเตะ
+              </span>
+              {selectedStatus !== "ALL" && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-[var(--barca-navy)]/30 border border-[var(--barca-navy-light)]/40 text-blue-200 text-[11px]">
+                  สถานะ: {statuses.find(s => s.value === selectedStatus)?.label}
+                </span>
+              )}
+              {selectedSeason !== "ALL" && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-[var(--barca-crimson)]/30 border border-[var(--barca-crimson-light)]/40 text-red-200 text-[11px]">
+                  ฤดูกาล: {selectedSeason}
+                </span>
+              )}
+              {selectedPosition !== "ALL" && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-purple-500/20 border border-purple-500/30 text-purple-200 text-[11px]">
+                  ตำแหน่ง: {positions.find(p => p.value === selectedPosition)?.label}
+                </span>
+              )}
+              {searchQuery && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/20 text-white text-[11px]">
+                  ค้นหา: &ldquo;{searchQuery}&rdquo;
+                </span>
+              )}
+            </div>
+
+            {(selectedStatus !== "ALL" || selectedSeason !== "ALL" || selectedPosition !== "ALL" || searchQuery) && (
+              <button
+                onClick={() => {
+                  setSelectedStatus("ALL");
+                  setSelectedSeason("ALL");
+                  setSelectedPosition("ALL");
+                  setSearchQuery("");
+                }}
+                className="text-xs text-[var(--barca-gold)] hover:text-white transition-colors underline cursor-pointer"
+              >
+                ✕ ล้างตัวกรองทั้งหมด
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -246,6 +322,41 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
             </section>
           );
         })}
+
+        {/* Players without pre-season records yet (Academy talents) */}
+        {selectedSeason === "ALL" && playersWithoutPreseason.length > 0 && (
+          <section id="academy-talents" className="relative pt-10 border-t border-white/10">
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex-shrink-0 w-1 h-16 rounded-full"
+                  style={{ background: "var(--barca-gold)" }}
+                />
+                <div>
+                  <h2 className="font-display font-black text-2xl sm:text-3xl text-white">
+                    ดาวรุ่งในสถาบัน (รอโอกาส Pre-Season)
+                  </h2>
+                  <p className="text-sm text-[var(--text-muted)] mt-1">
+                    {playersWithoutPreseason.length} นักเตะเยาวชนในระบบที่กำลังรอโอกาสขึ้นฝึกซ้อมกับทีมชุดใหญ่
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/players"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--barca-gold)] hover:text-white glass px-4 py-2 rounded-xl border border-[var(--barca-gold)]/20 transition-all hover:bg-[var(--surface-3)]"
+              >
+                <span>ดูทำเนียบนักเตะทั้งหมด</span>
+                <span>→</span>
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 items-stretch">
+              {playersWithoutPreseason.map((player, i) => (
+                <PlayerCard key={player.id} player={player} delay={i * 60} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

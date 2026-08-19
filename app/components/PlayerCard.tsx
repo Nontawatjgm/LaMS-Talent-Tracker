@@ -39,12 +39,25 @@ function getAvatarGradient(id: string): string {
   return gradients[idx];
 }
 
+function formatDebutDate(dateStr?: string | null): string {
+  if (!dateStr) return "";
+  const dmy = dateStr.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})$/);
+  if (dmy) return `${dmy[1].padStart(2, "0")}/${dmy[2].padStart(2, "0")}/${dmy[3]}`;
+  const ymd = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (ymd) return `${ymd[3].padStart(2, "0")}/${ymd[2].padStart(2, "0")}/${ymd[1]}`;
+  return dateStr;
+}
+
 export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
   const age = getAge(player.dateOfBirth);
-  const latestPreSeason = player.preSeasons[player.preSeasons.length - 1];
-  const totalGoals = player.preSeasons.reduce((sum, ps) => sum + (ps.goals ?? 0), 0);
-  const totalAssists = player.preSeasons.reduce((sum, ps) => sum + (ps.assists ?? 0), 0);
-  const totalApps = player.preSeasons.reduce((sum, ps) => sum + (ps.appearances ?? 0), 0);
+  const latestPreSeason = player.preSeasons && player.preSeasons.length > 0
+    ? player.preSeasons[player.preSeasons.length - 1]
+    : undefined;
+  const totalGoals = (player.preSeasons || []).reduce((sum, ps) => sum + (ps.goals ?? 0), 0);
+  const totalAssists = (player.preSeasons || []).reduce((sum, ps) => sum + (ps.assists ?? 0), 0);
+  const totalApps = (player.preSeasons || []).reduce((sum, ps) => sum + (ps.appearances ?? 0), 0);
+
+  const hasDebut = Boolean(player.firstTeamDebutDate || player.firstTeamDebutMatch);
 
   return (
     <Link
@@ -52,13 +65,13 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
       className="block h-full"
       aria-label={`View ${player.name} profile`}
     >
-      <article className="rounded-2xl glass card-hover group relative overflow-hidden flex flex-col gap-4 p-5 h-full min-h-[260px] border border-white/10">
+      <article className="rounded-2xl glass card-hover group relative overflow-hidden flex flex-col gap-3.5 p-5 h-full min-h-[270px] border border-white/10">
         {/* Background glow on hover */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
           style={{
             background:
-              "radial-gradient(circle at 50% 0%, rgba(0,77,152,0.12) 0%, transparent 70%)",
+              "radial-gradient(circle at 50% 0%, rgba(0,77,152,0.14) 0%, transparent 70%)",
           }}
         />
 
@@ -74,9 +87,8 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
         {/* ─── Header row ─── */}
         <div className="flex items-start gap-3 relative">
           {/* Avatar */}
-          {/* Avatar */}
           <div
-            className="w-14 h-14 rounded-xl shrink-0 flex items-center justify-center relative overflow-hidden"
+            className="w-14 h-14 rounded-xl shrink-0 flex items-center justify-center relative overflow-hidden shadow-sm"
             style={{ background: player.imageUrl ? 'transparent' : getAvatarGradient(player.id) }}
           >
             {player.imageUrl ? (
@@ -92,13 +104,11 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
                 #{player.jerseyNumber}
               </span>
             )}
-            
-            {/* If using image, we can optionally overlay the jersey number if needed, but it might clutter it. Let's keep it simple. */}
           </div>
 
           {/* Name & info */}
           <div className="flex-1 min-w-0">
-            <h3 className="font-display font-bold text-[15px] text-white leading-tight truncate m-0">
+            <h3 className="font-display font-bold text-[15px] text-white leading-tight truncate m-0 group-hover:text-[var(--barca-gold)] transition-colors">
               {player.name}
             </h3>
             <div className="flex items-center gap-1.5 mt-1 flex-wrap">
@@ -116,7 +126,7 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
         </div>
 
         {/* ─── Divider ─── */}
-        <div className="divider-barca" />
+        <div className="divider-barca opacity-60" />
 
         {/* ─── Stats row ─── */}
         <div className="grid grid-cols-3 gap-2">
@@ -127,34 +137,52 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
           ].map(({ label, value }) => (
             <div
               key={label}
-              className="text-center rounded-xl bg-[var(--surface-3)] py-2.5 px-1"
+              className="text-center rounded-xl bg-[var(--surface-3)] py-2 px-1"
             >
-              <span className="block text-xl font-bold font-display text-white leading-tight">
+              <span className="block text-lg font-bold font-display text-white leading-tight">
                 {value}
               </span>
-              <span className="block text-[10px] text-[var(--text-muted)] mt-1">
+              <span className="block text-[10px] text-[var(--text-muted)] mt-0.5">
                 {label}
               </span>
             </div>
           ))}
         </div>
 
-        {/* ─── Latest pre-season ─── */}
-        {latestPreSeason && (
-          <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-[var(--barca-gold)] inline-block" />
-            Pre-season ล่าสุด:{" "}
-            <span className="text-[var(--text-secondary)] font-medium">
-              {latestPreSeason.season}
-            </span>
-          </div>
-        )}
+        {/* ─── Debut Badge or Latest Pre-season ─── */}
+        <div className="text-xs">
+          {hasDebut ? (
+            <div
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-500/10 border border-purple-500/25 text-purple-300 font-medium text-[11px] max-w-full truncate shadow-2xs"
+              title={player.firstTeamDebutMatch || (player.firstTeamDebutDate ? `Debut: ${formatDebutDate(player.firstTeamDebutDate)}` : "")}
+            >
+              <span className="text-xs">⭐</span>
+              <span className="truncate">
+                Debut: {player.firstTeamDebutDate ? formatDebutDate(player.firstTeamDebutDate) : (player.firstTeamDebutMatch || "First Team")}
+              </span>
+            </div>
+          ) : latestPreSeason ? (
+            <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-[var(--barca-gold)] inline-block" />
+              <span>Pre-season ล่าสุด:</span>
+              <span className="text-[var(--text-secondary)] font-medium">
+                {latestPreSeason.season}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-gray-500 inline-block" />
+              <span>เข้าปี {player.lamasiaYear}</span>
+            </div>
+          )}
+        </div>
 
         {/* ─── Footer ─── */}
-        <div className="mt-auto flex items-center justify-between">
+        <div className="mt-auto flex items-center justify-between pt-1">
           <StatusBadge status={player.currentStatus} />
-          <span className="text-xs text-[var(--text-muted)] transition-colors group-hover:text-[var(--barca-navy-light)]">
-            ดูโปรไฟล์ →
+          <span className="text-xs text-[var(--text-muted)] transition-colors group-hover:text-white flex items-center gap-1">
+            <span>ดูโปรไฟล์</span>
+            <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
           </span>
         </div>
       </article>

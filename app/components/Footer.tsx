@@ -22,7 +22,7 @@ export default function Footer() {
     { name: "Pau Cubarsí", id: "pau-cubarsi", pos: "DEF", flag: "🇪🇸" },
     { name: "Marc Bernal", id: "marc-bernal", pos: "MID", flag: "🇪🇸" },
     { name: "Gerard Martín", id: "gerard-martin", pos: "DEF", flag: "🇪🇸" },
-    { name: "Pau Víctor", id: "pau-victor", pos: "FWD", flag: "🇪🇸" },
+    { name: "Héctor Fort", id: "hector-fort", pos: "DEF", flag: "🇪🇸" },
     { name: "Marc Casadó", id: "marc-casado", pos: "MID", flag: "🇪🇸" },
   ];
 
@@ -112,6 +112,14 @@ export default function Footer() {
                   className="hover:text-white hover:translate-x-1 inline-flex items-center gap-1.5 transition-all duration-200"
                 >
                   <span>🏠</span> หน้าหลัก (Home)
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/players"
+                  className="hover:text-white hover:translate-x-1 inline-flex items-center gap-1.5 transition-all duration-200"
+                >
+                  <span>👥</span> นักเตะทั้งหมด
                 </Link>
               </li>
               <li>

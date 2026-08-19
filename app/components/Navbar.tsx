@@ -8,6 +8,7 @@ import SearchModal from "./SearchModal";
 
 const navLinks = [
   { href: "/", label: "หน้าหลัก" },
+  { href: "/players", label: "นักเตะทั้งหมด" },
   { href: "/timeline", label: "Timeline" },
   { href: "/compare", label: "เปรียบเทียบนักเตะ" },
 ];
@@ -110,14 +111,14 @@ export default function Navbar({ players }: { players: Player[] }) {
 
             {/* 3. Right - Search Button & Badge & Mobile toggle */}
             <div className="flex-1 flex justify-end items-center gap-2 sm:gap-3">
-              {/* Quick Search Button */}
+              {/* Clean Minimalist Search Trigger */}
               <button
                 onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass hover:bg-[var(--surface-3)] text-xs text-[var(--text-secondary)] hover:text-white border border-white/10 transition-all duration-200"
+                className="group flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] text-xs text-[var(--text-secondary)] hover:text-white border border-white/10 hover:border-white/20 transition-all duration-200 cursor-pointer"
                 aria-label="ค้นหานักเตะ"
               >
                 <svg
-                  className="w-3.5 h-3.5 text-[var(--barca-gold)] shrink-0"
+                  className="w-3.5 h-3.5 text-[var(--barca-gold)] shrink-0 transition-transform duration-200 group-hover:scale-110"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -129,10 +130,9 @@ export default function Navbar({ players }: { players: Player[] }) {
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
-                <span className="hidden sm:inline">ค้นหา...</span>
-                <kbd className="hidden lg:inline-block text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--surface-3)] text-[var(--text-muted)] border border-white/10">
-                  Ctrl+K
-                </kbd>
+                <span className="text-[var(--text-muted)] group-hover:text-white transition-colors font-medium">
+                  ค้นหา...
+                </span>
               </button>
 
               {/* Barça badge pill */}
