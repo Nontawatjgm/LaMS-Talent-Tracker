@@ -80,7 +80,7 @@ export default function PlayerCard({ player, delay = 0 }: PlayerCardProps) {
             style={{ background: player.imageUrl ? 'transparent' : getAvatarGradient(player.id) }}
           >
             {player.imageUrl ? (
-              <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+              <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover object-top" />
             ) : (
               <span className="text-white font-bold text-lg font-display relative z-10">
                 {getInitials(player.name)}

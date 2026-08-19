@@ -395,7 +395,7 @@ export default function AdminPlayersList({ initialPlayers }: AdminPlayersListPro
                               style={{ background: player.imageUrl ? "var(--surface-3)" : getPositionGradient(player.position) }}
                             >
                               {player.imageUrl ? (
-                                <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+                                <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover object-top" />
                               ) : (
                                 player.name.split(" ").map((n) => n[0]).slice(0, 2).join("")
                               )}
@@ -509,7 +509,7 @@ export default function AdminPlayersList({ initialPlayers }: AdminPlayersListPro
                               <img
                                 src={player.imageUrl}
                                 alt={player.name}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover object-top"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center font-display font-black text-2xl text-white/90">

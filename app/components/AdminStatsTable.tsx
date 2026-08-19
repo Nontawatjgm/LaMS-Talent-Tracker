@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { deletePreSeason } from "@/app/actions/statsActions";
 import { ConfirmModal } from "@/app/components/ConfirmModal";
 import { useToast } from "@/app/components/Toast";
@@ -99,14 +100,22 @@ export function AdminStatsTable({
                       {stat.notes && <div className="text-[10px] text-[var(--text-muted)] truncate">{stat.notes}</div>}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        type="button"
-                        onClick={() => setStatToDelete(stat)}
-                        disabled={deletingId === stat.id || isPending}
-                        className="px-2.5 py-1 rounded-lg text-xs font-semibold text-red-600 bg-red-50/80 hover:bg-red-600 hover:text-white transition-all border border-red-200 cursor-pointer disabled:opacity-50"
-                      >
-                        ลบ
-                      </button>
+                      <div className="flex justify-end items-center gap-2">
+                        <Link
+                          href={`/admin/players/${playerId}/stats/${stat.id}/edit`}
+                          className="px-2.5 py-1 rounded-lg text-xs font-semibold text-[#004D98] bg-blue-50/80 hover:bg-[#004D98] hover:text-white transition-all border border-[#004D98]/15"
+                        >
+                          แก้ไข
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => setStatToDelete(stat)}
+                          disabled={deletingId === stat.id || isPending}
+                          className="px-2.5 py-1 rounded-lg text-xs font-semibold text-red-600 bg-red-50/80 hover:bg-red-600 hover:text-white transition-all border border-red-200 cursor-pointer disabled:opacity-50"
+                        >
+                          ลบ
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

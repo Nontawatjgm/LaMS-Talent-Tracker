@@ -4,7 +4,9 @@ import { useState, useRef, useEffect, ChangeEvent } from "react";
 
 interface DatePickerInputProps {
   name: string;
+  value?: string;
   defaultValue?: string | null;
+  onChange?: (val: string) => void;
   required?: boolean;
   placeholder?: string;
   className?: string;
@@ -36,29 +38,42 @@ function formatToYMD(val?: string | null): string {
 
 export function DatePickerInput({
   name,
+  value: controlledValue,
   defaultValue = "",
+  onChange,
   required = false,
   placeholder = "13/07/2007",
   className = "",
 }: DatePickerInputProps) {
-  const [textValue, setTextValue] = useState(formatToDMY(defaultValue));
+  const [internalValue, setInternalValue] = useState(formatToDMY(defaultValue));
   const hiddenDateRef = useRef<HTMLInputElement>(null);
 
+  const isControlled = controlledValue !== undefined;
+  const textValue = isControlled ? controlledValue : internalValue;
+
   useEffect(() => {
-    if (defaultValue) {
-      setTextValue(formatToDMY(defaultValue));
+    if (!isControlled && defaultValue) {
+      setInternalValue(formatToDMY(defaultValue));
     }
-  }, [defaultValue]);
+  }, [defaultValue, isControlled]);
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTextValue(e.target.value);
+    const val = e.target.value;
+    if (!isControlled) {
+      setInternalValue(val);
+    }
+    onChange?.(val);
   };
 
   const handlePickerChange = (e: ChangeEvent<HTMLInputElement>) => {
     const ymd = e.target.value;
     if (ymd) {
       const [y, m, d] = ymd.split("-");
-      setTextValue(`${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`);
+      const dmy = `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+      if (!isControlled) {
+        setInternalValue(dmy);
+      }
+      onChange?.(dmy);
     }
   };
 
@@ -88,7 +103,7 @@ export function DatePickerInput({
         placeholder={placeholder}
         pattern="^(\d{1,2}\/\d{1,2}\/\d{4})?$"
         title="รูปแบบ: วัน/เดือน/ปี (เช่น 13/07/2007)"
-        className="w-full bg-white text-[#0B1F40] pl-4 pr-11 py-2.5 rounded-xl border border-[rgba(0,77,152,0.15)] focus:outline-none focus:border-[#004D98] focus:ring-2 focus:ring-[#004D98]/10 text-sm font-medium placeholder:text-gray-400 shadow-2xs hover:border-[rgba(0,77,152,0.35)] transition-all"
+        className="w-full bg-white text-[#0B1F40] pl-4 pr-16 py-2.5 rounded-xl border border-[rgba(0,77,152,0.15)] focus:outline-none focus:border-[#004D98] focus:ring-2 focus:ring-[#004D98]/10 text-sm font-medium placeholder:text-gray-400 shadow-2xs hover:border-[rgba(0,77,152,0.35)] transition-all"
       />
 
       {/* Hidden date input to trigger calendar picker */}
@@ -101,6 +116,25 @@ export function DatePickerInput({
         className="sr-only"
         aria-hidden="true"
       />
+
+      {/* Clear Button (shown when there is a value) */}
+      {textValue && (
+        <button
+          type="button"
+          onClick={() => {
+            if (!isControlled) {
+              setInternalValue("");
+            }
+            onChange?.("");
+          }}
+          title="ล้างวันที่ (Clear Date)"
+          className="absolute right-9 top-1/2 -translate-y-1/2 p-1 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      )}
 
       {/* Calendar Icon Button */}
       <button

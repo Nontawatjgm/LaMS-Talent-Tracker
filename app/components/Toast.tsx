@@ -52,6 +52,12 @@ function ToastUrlListener() {
         title: "บันทึกสถิติสำเร็จ ⚽",
         message: season ? `เพิ่มสถิติพรีซีซั่นฤดูกาล ${season} เรียบร้อยแล้ว` : "เพิ่มสถิติเรียบร้อยแล้ว",
       });
+    } else if (toastType === "stat_updated") {
+      showToast({
+        type: "success",
+        title: "บันทึกการแก้ไขสถิติสำเร็จ ✨",
+        message: season ? `อัปเดตสถิติพรีซีซั่นฤดูกาล ${season} เรียบร้อยแล้ว` : "อัปเดตสถิติเรียบร้อยแล้ว",
+      });
     }
 
     // Clean URL without reloading page

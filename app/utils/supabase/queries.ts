@@ -39,6 +39,7 @@ export async function getPlayers(): Promise<Player[]> {
     preferredFoot: p.preferred_foot,
     marketValueM: p.market_value_m,
     firstTeamDebutDate: p.first_team_debut_date,
+    firstTeamDebutMatch: p.first_team_debut_match,
     socialInstagram: p.social_instagram,
     preSeasons: (p.preSeasons || []).map((ps: any) => ({
       year: ps.year,

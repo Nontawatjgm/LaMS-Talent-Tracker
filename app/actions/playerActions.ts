@@ -75,6 +75,7 @@ export async function createPlayer(formData: FormData) {
     preferred_foot: (formData.get("preferred_foot") as string)?.trim() || null,
     market_value_m: safeParseFloat(marketValueStr),
     first_team_debut_date: parseDateToISO(formData.get("first_team_debut_date") as string),
+    first_team_debut_match: (formData.get("first_team_debut_match") as string)?.trim() || null,
     social_instagram: (formData.get("social_instagram") as string)?.trim() || null,
   };
 
@@ -160,6 +161,7 @@ export async function updatePlayer(id: string, formData: FormData) {
     preferred_foot: (formData.get("preferred_foot") as string)?.trim() || null,
     market_value_m: safeParseFloat(marketValueStr),
     first_team_debut_date: parseDateToISO(formData.get("first_team_debut_date") as string),
+    first_team_debut_match: (formData.get("first_team_debut_match") as string)?.trim() || null,
     social_instagram: (formData.get("social_instagram") as string)?.trim() || null,
   };
 

@@ -31,6 +31,7 @@ export interface Player {
   preferredFoot?: "Right" | "Left" | "Both"
   marketValueM?: number
   firstTeamDebutDate?: string
+  firstTeamDebutMatch?: string
   socialInstagram?: string
 }
 

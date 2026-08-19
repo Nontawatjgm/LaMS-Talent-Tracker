@@ -39,7 +39,7 @@ function PlayerProfileSummary({ player, alignRight = false }: { player: Player |
         <div className="w-20 h-20 rounded-2xl flex items-center justify-center shrink-0 border border-white/10 overflow-hidden"
           style={{ background: player.imageUrl ? 'transparent' : (alignRight ? 'var(--barca-navy)' : 'var(--barca-crimson)') }}>
           {player.imageUrl ? (
-            <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+            <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover object-top" />
           ) : (
             <span className="font-display font-black text-2xl text-white opacity-80">{getInitials(player.name)}</span>
           )}

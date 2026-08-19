@@ -112,7 +112,7 @@ export default async function PlayerProfilePage(props: PageProps<"/players/[id]"
               }}
             >
               {player.imageUrl ? (
-                <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover" />
+                <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover object-top" />
               ) : (
                 <span className="relative z-10">{getInitials(player.name)}</span>
               )}
@@ -209,9 +209,10 @@ export default async function PlayerProfilePage(props: PageProps<"/players/[id]"
                     #{player.jerseyNumber}
                   </div>
                 )}
-                {player.firstTeamDebutDate && (
-                  <div className="stat-pill">
-                    Debut: {formatDate(player.firstTeamDebutDate)}
+                {(player.firstTeamDebutDate || player.firstTeamDebutMatch) && (
+                  <div className="stat-pill border-purple-500/30 text-purple-300 bg-purple-500/10">
+                    Debut: {player.firstTeamDebutDate ? formatDate(player.firstTeamDebutDate) : ""}
+                    {player.firstTeamDebutMatch ? ` (${player.firstTeamDebutMatch})` : ""}
                   </div>
                 )}
                 {player.marketValueM && (

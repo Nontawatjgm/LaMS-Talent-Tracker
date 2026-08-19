@@ -4,18 +4,34 @@ import { useState, FormEvent, useTransition } from "react";
 import Link from "next/link";
 import { validatePreSeasonForm } from "@/app/utils/validation";
 
+export interface PreSeasonData {
+  id?: string;
+  season: string;
+  year: number;
+  appearances: number;
+  minutes_played: number;
+  goals: number;
+  assists: number;
+  tour_location: string | null;
+  notes: string | null;
+}
+
 interface PreSeasonFormProps {
   playerId: string;
   action: (formData: FormData) => Promise<void>;
-  suggestedSeason: string;
-  currentYear: number;
+  stat?: PreSeasonData;
+  suggestedSeason?: string;
+  currentYear?: number;
+  isEdit?: boolean;
 }
 
 export function PreSeasonForm({
   playerId,
   action,
-  suggestedSeason,
-  currentYear,
+  stat,
+  suggestedSeason = "",
+  currentYear = new Date().getFullYear(),
+  isEdit = false,
 }: PreSeasonFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
@@ -110,7 +126,7 @@ export function PreSeasonForm({
               type="text"
               name="season"
               list="seasons-list"
-              defaultValue={suggestedSeason}
+              defaultValue={stat?.season ?? suggestedSeason}
               onChange={() => clearFieldError("season")}
               placeholder="2024/25"
               className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border transition-all placeholder:text-gray-500 focus:outline-none ${
@@ -136,7 +152,7 @@ export function PreSeasonForm({
             <input
               type="number"
               name="year"
-              defaultValue={currentYear}
+              defaultValue={stat?.year ?? currentYear}
               onChange={() => clearFieldError("year")}
               placeholder="2024"
               className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border transition-all placeholder:text-gray-500 focus:outline-none ${
@@ -152,6 +168,7 @@ export function PreSeasonForm({
             <input
               type="text"
               name="tour_location"
+              defaultValue={stat?.tour_location ?? ""}
               placeholder="USA Tour"
               className="w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border border-white/5 focus:outline-none focus:border-[var(--barca-gold)] placeholder:text-gray-500"
             />
@@ -171,7 +188,7 @@ export function PreSeasonForm({
             <input
               type="number"
               name="appearances"
-              defaultValue="0"
+              defaultValue={stat?.appearances ?? 0}
               min="0"
               onChange={() => clearFieldError("appearances")}
               className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border text-center font-display text-lg focus:outline-none ${
@@ -187,7 +204,7 @@ export function PreSeasonForm({
             <input
               type="number"
               name="minutes_played"
-              defaultValue="0"
+              defaultValue={stat?.minutes_played ?? 0}
               min="0"
               onChange={() => clearFieldError("minutes_played")}
               className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border text-center font-display text-lg focus:outline-none ${
@@ -203,7 +220,7 @@ export function PreSeasonForm({
             <input
               type="number"
               name="goals"
-              defaultValue="0"
+              defaultValue={stat?.goals ?? 0}
               min="0"
               onChange={() => clearFieldError("goals")}
               className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border text-center font-display text-lg focus:outline-none ${
@@ -219,7 +236,7 @@ export function PreSeasonForm({
             <input
               type="number"
               name="assists"
-              defaultValue="0"
+              defaultValue={stat?.assists ?? 0}
               min="0"
               onChange={() => clearFieldError("assists")}
               className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border text-center font-display text-lg focus:outline-none ${
@@ -236,6 +253,7 @@ export function PreSeasonForm({
           <textarea
             name="notes"
             rows={3}
+            defaultValue={stat?.notes ?? ""}
             placeholder="บันทึกผลงานเด่น เช่น ยิง 1 ประตูในเกมพบ แมนฯ ซิตี้..."
             className="w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border border-white/5 focus:outline-none focus:border-[var(--barca-gold)] resize-none placeholder:text-gray-500"
           />
@@ -265,10 +283,10 @@ export function PreSeasonForm({
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
-              <span>กำลังบันทึกสถิติ...</span>
+              <span>{isEdit ? "กำลังบันทึกการแก้ไข..." : "กำลังบันทึกสถิติ..."}</span>
             </>
           ) : (
-            <span>บันทึกสถิติ</span>
+            <span>{isEdit ? "บันทึกการแก้ไข" : "บันทึกสถิติ"}</span>
           )}
         </button>
       </div>

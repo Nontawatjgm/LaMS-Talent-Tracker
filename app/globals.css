@@ -90,11 +90,11 @@
    Force dark text in admin main content area
    Overrides hardcoded text-white utilities
    ----------------------------------------------- */
-.admin-theme main h1,
-.admin-theme main h2,
-.admin-theme main h3,
-.admin-theme main h4,
-.admin-theme main strong {
+.admin-theme main h1:not(.keep-white),
+.admin-theme main h2:not(.keep-white),
+.admin-theme main h3:not(.keep-white),
+.admin-theme main h4:not(.keep-white),
+.admin-theme main strong:not(.keep-white) {
   color: var(--text-primary);
 }
 
