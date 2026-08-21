@@ -408,7 +408,7 @@ export default async function HomePage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 items-stretch">
               {featuredPlayers.map((player, i) => (
-                <PlayerCard key={player.id} player={player} delay={i * 100} theme="light" />
+                <PlayerCard key={player.id} player={player} delay={i * 100} />
               ))}
             </div>
           )}
@@ -619,7 +619,7 @@ export default async function HomePage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 items-stretch">
               {recentPlayers.map((player, i) => (
-                <PlayerCard key={player.id} player={player} delay={i * 80} theme="light" />
+                <PlayerCard key={player.id} player={player} delay={i * 80} />
               ))}
             </div>
           )}

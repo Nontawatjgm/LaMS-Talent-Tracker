@@ -443,7 +443,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
           /* Grid View — Style A Light Cards */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 items-stretch">
             {filteredPlayers.map((player, index) => (
-              <PlayerCard key={player.id} player={player} delay={index * 40} theme="light" />
+              <PlayerCard key={player.id} player={player} delay={index * 40} />
             ))}
           </div>
         ) : (
