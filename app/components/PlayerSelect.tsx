@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from "react";
 import type { Player } from "@/types/player";
-import { PositionBadge, StatusBadge } from "./StatusBadge";
+import { PositionBadge } from "./StatusBadge";
 import { FlagIcon } from "./FlagIcon";
 
 interface PlayerSelectProps {
@@ -10,6 +10,7 @@ interface PlayerSelectProps {
   value: string | null;
   onChange: (playerId: string | null) => void;
   label: string;
+  themeColor?: "crimson" | "navy";
 }
 
 const AVATAR_GRADIENTS = [
@@ -28,7 +29,12 @@ function getAvatarGradient(id: string): string {
 }
 
 function getInitials(name: string): string {
-  return name.split(" ").slice(0, 2).map((n) => n[0]).join("").toUpperCase();
+  return name
+    .split(" ")
+    .slice(0, 2)
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 }
 
 function getAge(dateOfBirth?: string): number | null {
@@ -41,7 +47,13 @@ function getAge(dateOfBirth?: string): number | null {
   return age;
 }
 
-export default function PlayerSelect({ players, value, onChange, label }: PlayerSelectProps) {
+export default function PlayerSelect({
+  players,
+  value,
+  onChange,
+  label,
+  themeColor = "crimson",
+}: PlayerSelectProps) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(0);
@@ -116,17 +128,29 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
     }, 50);
   };
 
+  const isCrimson = themeColor === "crimson";
+  const accentBorderHover = isCrimson
+    ? "hover:border-[#A2001D]/70"
+    : "hover:border-[#004D98]/70";
+  const accentFocusBorder = isCrimson
+    ? "focus:border-[#A2001D] focus:ring-[#A2001D]/15"
+    : "focus:border-[#004D98] focus:ring-[#004D98]/15";
+  const accentDot = isCrimson ? "bg-[#A2001D]" : "bg-[#004D98]";
+
   return (
     <div ref={containerRef} className="w-full relative">
       <div className="flex items-center justify-between mb-2">
-        <label className="text-sm font-semibold text-[var(--text-secondary)]">
-          {label}
-        </label>
+        <div className="flex items-center gap-2">
+          <span className={`w-2.5 h-2.5 rounded-full ${accentDot}`} />
+          <label className="text-xs font-bold text-[#0B1F40] uppercase tracking-wider">
+            {label}
+          </label>
+        </div>
         {selectedPlayer && (
           <button
             type="button"
             onClick={handleClear}
-            className="text-xs text-[var(--barca-gold)] hover:underline cursor-pointer flex items-center gap-1"
+            className="text-xs font-semibold text-[#004D98] hover:text-[#A2001D] hover:underline cursor-pointer flex items-center gap-1"
           >
             <span>เปลี่ยนนักเตะ</span>
             <span>✕</span>
@@ -141,13 +165,15 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
             setIsOpen(true);
             setTimeout(() => inputRef.current?.focus(), 50);
           }}
-          className="w-full p-3 rounded-2xl bg-[var(--surface-3)] border border-white/10 hover:border-[var(--barca-gold)]/40 hover:bg-white/5 transition-all cursor-pointer flex items-center justify-between gap-3 group shadow-md"
+          className={`w-full p-3.5 rounded-2xl bg-white border border-gray-200 shadow-xs ${accentBorderHover} hover:shadow-md transition-all cursor-pointer flex items-center justify-between gap-3 group`}
         >
           <div className="flex items-center gap-3 min-w-0">
             <div
-              className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center relative overflow-hidden border border-white/10"
+              className="w-12 h-12 rounded-xl shrink-0 flex items-center justify-center relative overflow-hidden border border-gray-200 bg-gray-50 shadow-2xs"
               style={{
-                background: selectedPlayer.imageUrl ? "transparent" : getAvatarGradient(selectedPlayer.id),
+                background: selectedPlayer.imageUrl
+                  ? "transparent"
+                  : getAvatarGradient(selectedPlayer.id),
               }}
             >
               {selectedPlayer.imageUrl ? (
@@ -165,7 +191,7 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
 
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <span className="font-display font-bold text-white text-base truncate group-hover:text-[var(--barca-gold)] transition-colors">
+                <span className="font-display font-bold text-[#0B1F40] text-base truncate group-hover:text-[#004D98] transition-colors">
                   {selectedPlayer.name}
                 </span>
                 {selectedPlayer.jerseyNumber && (
@@ -174,10 +200,13 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-2 mt-0.5 text-xs text-[var(--text-muted)]">
+              <div className="flex items-center gap-2 mt-0.5 text-xs text-[#64748B]">
                 <PositionBadge position={selectedPlayer.position} />
                 <span className="flex items-center gap-1">
-                  <FlagIcon nationality={selectedPlayer.nationality} emoji={selectedPlayer.flagEmoji} />
+                  <FlagIcon
+                    nationality={selectedPlayer.nationality}
+                    emoji={selectedPlayer.flagEmoji}
+                  />
                   <span>{selectedPlayer.nationality}</span>
                 </span>
                 {selectedPlayer.dateOfBirth && (
@@ -188,11 +217,11 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
           </div>
 
           <div className="shrink-0 flex items-center gap-2">
-            <span className="text-xs text-[var(--text-muted)] group-hover:text-white transition-colors hidden sm:inline">
+            <span className="text-xs text-[#64748B] group-hover:text-[#004D98] transition-colors hidden sm:inline font-medium">
               คลิกเพื่อค้นหาใหม่
             </span>
             <svg
-              className="w-4 h-4 text-[var(--text-muted)] group-hover:text-[var(--barca-gold)] transition-colors"
+              className="w-4 h-4 text-gray-400 group-hover:text-[#004D98] transition-colors"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -231,7 +260,7 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
               onFocus={() => setIsOpen(true)}
               onKeyDown={handleKeyDown}
               placeholder="พิมพ์ค้นหาชื่อนักเตะ, ตำแหน่ง หรือสัญชาติ..."
-              className="w-full bg-[var(--surface-3)] text-white pl-11 pr-10 py-3 rounded-2xl border border-white/15 focus:outline-none focus:border-[var(--barca-gold)] focus:ring-2 focus:ring-[var(--barca-gold)]/20 transition-all text-sm placeholder:text-gray-400 shadow-md"
+              className={`w-full bg-white text-[#0B1F40] pl-11 pr-10 py-3.5 rounded-2xl border border-gray-300 focus:outline-none ${accentFocusBorder} focus:ring-2 transition-all text-sm placeholder:text-gray-400 shadow-xs`}
             />
 
             {query && (
@@ -241,7 +270,7 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
                   setQuery("");
                   inputRef.current?.focus();
                 }}
-                className="absolute right-3.5 text-gray-400 hover:text-white p-1 rounded-lg cursor-pointer"
+                className="absolute right-3.5 text-gray-400 hover:text-[#0B1F40] p-1 rounded-lg cursor-pointer text-xs"
               >
                 ✕
               </button>
@@ -252,19 +281,19 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
           {isOpen && (
             <div
               onWheel={(e) => e.stopPropagation()}
-              className="absolute top-full left-0 right-0 mt-2 bg-[#0B1528] border border-white/15 rounded-2xl shadow-2xl z-50 max-h-80 overflow-y-auto custom-dropdown-menu p-1.5 backdrop-blur-xl animate-scale-in"
+              className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50 max-h-80 overflow-y-auto custom-dropdown-menu p-1.5 backdrop-blur-xl animate-scale-in"
               style={{ overscrollBehavior: "contain" }}
             >
               {filteredPlayers.length === 0 ? (
-                <div className="py-8 text-center text-gray-400 text-xs">
-                  <span className="block text-xl mb-1">🔍</span>
+                <div className="py-8 text-center text-[#64748B] text-xs">
+                  <span className="block text-sm font-semibold mb-1">ไม่พบนักเตะ</span>
                   ไม่พบนักเตะที่ตรงกับ &ldquo;{query}&rdquo;
                 </div>
               ) : (
                 <div className="space-y-1">
-                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 flex items-center justify-between">
+                  <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#64748B] flex items-center justify-between border-b border-gray-100">
                     <span>ผลการค้นหา ({filteredPlayers.length} คน)</span>
-                    <span className="text-[9px] text-gray-500 font-normal">ใช้ลูกศร ↑ ↓ และกด Enter เพื่อเลือก</span>
+                    <span className="text-[9px] text-[#94A3B8] font-normal">ใช้ลูกศร ↑ ↓ และกด Enter</span>
                   </div>
 
                   {filteredPlayers.map((player, idx) => {
@@ -280,18 +309,22 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
                         onMouseEnter={() => setFocusedIndex(idx)}
                         className={`w-full flex items-center justify-between p-2.5 rounded-xl text-left transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-[var(--barca-gold)]/15 border border-[var(--barca-gold)]/30 text-white"
+                            ? isCrimson
+                              ? "bg-[#FDF2F4] border border-[#A2001D]/30 text-[#A2001D]"
+                              : "bg-[#EFF6FF] border border-[#004D98]/30 text-[#004D98]"
                             : isFocused
-                            ? "bg-white/10 text-white"
-                            : "text-gray-200 hover:bg-white/5"
+                            ? "bg-[#F8FAFD] text-[#0B1F40]"
+                            : "text-[#0B1F40] hover:bg-gray-50"
                         }`}
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           {/* Mini Avatar */}
                           <div
-                            className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center relative overflow-hidden border border-white/10"
+                            className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center relative overflow-hidden border border-gray-200 bg-gray-50"
                             style={{
-                              background: player.imageUrl ? "transparent" : getAvatarGradient(player.id),
+                              background: player.imageUrl
+                                ? "transparent"
+                                : getAvatarGradient(player.id),
                             }}
                           >
                             {player.imageUrl ? (
@@ -310,7 +343,7 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
                           {/* Info */}
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                              <span className="font-display font-bold text-white text-sm truncate">
+                              <span className="font-display font-bold text-sm text-[#0B1F40] truncate">
                                 {player.name}
                               </span>
                               {player.jerseyNumber && (
@@ -319,15 +352,18 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
                                 </span>
                               )}
                               {(player.firstTeamDebutDate || player.firstTeamDebutMatch) && (
-                                <span className="text-[9px] text-amber-300 bg-amber-500/15 px-1.5 py-0.2 rounded border border-amber-400/20">
-                                  ⭐ Debut
+                                <span className="text-[9px] text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200 font-bold">
+                                  Debut
                                 </span>
                               )}
                             </div>
 
-                            <div className="flex items-center gap-2 mt-0.5 text-[11px] text-gray-400">
+                            <div className="flex items-center gap-2 mt-0.5 text-[11px] text-[#64748B]">
                               <span className="flex items-center gap-1">
-                                <FlagIcon nationality={player.nationality} emoji={player.flagEmoji} />
+                                <FlagIcon
+                                  nationality={player.nationality}
+                                  emoji={player.flagEmoji}
+                                />
                                 <span>{player.nationality}</span>
                               </span>
                               {age && <span>· {age} ปี</span>}
@@ -340,7 +376,7 @@ export default function PlayerSelect({ players, value, onChange, label }: Player
                         <div className="shrink-0 flex items-center gap-2 pl-2">
                           <PositionBadge position={player.position} />
                           {isSelected && (
-                            <span className="w-2 h-2 rounded-full bg-[var(--barca-gold)] shrink-0" />
+                            <span className={`w-2 h-2 rounded-full ${accentDot} shrink-0`} />
                           )}
                         </div>
                       </button>

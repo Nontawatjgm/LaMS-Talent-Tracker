@@ -198,7 +198,7 @@ export default async function PlayerProfilePage(props: PageProps<"/players/[id]"
               {/* Action Buttons */}
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  href="/compare"
+                  href={`/compare?p1=${player.id}`}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg transition-all duration-300 hover:scale-105"
                   style={{ background: "linear-gradient(135deg, #A2001D 0%, #004D98 100%)" }}
                 >
