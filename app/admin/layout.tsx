@@ -121,9 +121,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Nav Items */}
         <nav className="flex-1 px-2.5 flex flex-col gap-1 overflow-y-auto">
           {navItems.map((item) => {
+            const isStatsRoute = pathname.startsWith("/admin/stats") || pathname.includes("/stats");
+            const isPlayersRoute = (pathname === "/admin/players" || pathname.startsWith("/admin/players/")) && !isStatsRoute;
+            const isDashboardRoute = pathname === "/admin";
+
             const isActive =
-              pathname === item.href ||
-              (item.href !== "/admin" && pathname.startsWith(item.href));
+              (item.href === "/admin" && isDashboardRoute) ||
+              (item.href === "/admin/stats" && isStatsRoute) ||
+              (item.href === "/admin/players" && isPlayersRoute);
             return (
               <Link
                 key={item.href}

@@ -38,8 +38,12 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="th"
       className={`${inter.variable} ${outfit.variable}`}
+      suppressHydrationWarning
     >
-      <body className="min-h-screen flex flex-col bg-[var(--bg-dark)] text-[var(--text-primary)] antialiased">
+      <body
+        className="min-h-screen flex flex-col bg-[var(--bg-dark)] text-[var(--text-primary)] antialiased"
+        suppressHydrationWarning
+      >
         <ToastProvider>
           <Navbar players={players} />
           <main className="flex-1">{children}</main>

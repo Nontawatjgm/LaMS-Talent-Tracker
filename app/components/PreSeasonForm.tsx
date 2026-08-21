@@ -3,6 +3,7 @@
 import { useState, FormEvent, useTransition } from "react";
 import Link from "next/link";
 import { validatePreSeasonForm } from "@/app/utils/validation";
+import { CustomSelect, type CustomSelectOption } from "@/app/components/CustomSelect";
 
 export interface PreSeasonData {
   id?: string;
@@ -15,6 +16,29 @@ export interface PreSeasonData {
   tour_location: string | null;
   notes: string | null;
 }
+
+const SEASON_OPTIONS: CustomSelectOption[] = [
+  { value: "2028/29", label: "ฤดูกาล 2028/29" },
+  { value: "2027/28", label: "ฤดูกาล 2027/28" },
+  { value: "2026/27", label: "ฤดูกาล 2026/27" },
+  { value: "2025/26", label: "ฤดูกาล 2025/26" },
+  { value: "2024/25", label: "ฤดูกาล 2024/25" },
+  { value: "2023/24", label: "ฤดูกาล 2023/24" },
+  { value: "2022/23", label: "ฤดูกาล 2022/23" },
+  { value: "2021/22", label: "ฤดูกาล 2021/22" },
+  { value: "2020/21", label: "ฤดูกาล 2020/21" },
+  { value: "2019/20", label: "ฤดูกาล 2019/20" },
+  { value: "2018/19", label: "ฤดูกาล 2018/19" },
+  { value: "2017/18", label: "ฤดูกาล 2017/18" },
+  { value: "2016/17", label: "ฤดูกาล 2016/17" },
+  { value: "2015/16", label: "ฤดูกาล 2015/16" },
+  { value: "2014/15", label: "ฤดูกาล 2014/15" },
+  { value: "2013/14", label: "ฤดูกาล 2013/14" },
+  { value: "2012/13", label: "ฤดูกาล 2012/13" },
+  { value: "2011/12", label: "ฤดูกาล 2011/12" },
+  { value: "2010/11", label: "ฤดูกาล 2010/11" },
+  { value: "CUSTOM", label: "+ ระบุฤดูกาลเอง (Custom)..." },
+];
 
 interface PreSeasonFormProps {
   playerId: string;
@@ -36,6 +60,41 @@ export function PreSeasonForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  const initialSeason = stat?.season || suggestedSeason || "2026/27";
+  const [isCustomSeason, setIsCustomSeason] = useState(
+    !SEASON_OPTIONS.some(opt => opt.value === initialSeason) && Boolean(stat?.season)
+  );
+  const [season, setSeason] = useState(initialSeason);
+  const [year, setYear] = useState<number | string>(
+    stat?.year ?? (parseInt(initialSeason.split("/")[0]) || currentYear)
+  );
+
+  const handleSeasonSelectChange = (val: string) => {
+    if (val === "CUSTOM") {
+      setIsCustomSeason(true);
+      setSeason("");
+    } else {
+      setIsCustomSeason(false);
+      setSeason(val);
+      clearFieldError("season");
+      const parsedYear = parseInt(val.split("/")[0]);
+      if (!isNaN(parsedYear)) {
+        setYear(parsedYear);
+        clearFieldError("year");
+      }
+    }
+  };
+
+  const handleCustomSeasonChange = (val: string) => {
+    setSeason(val);
+    clearFieldError("season");
+    const parsedYear = parseInt(val.split("/")[0]);
+    if (!isNaN(parsedYear) && parsedYear > 1900 && parsedYear < 2100) {
+      setYear(parsedYear);
+      clearFieldError("year");
+    }
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -118,43 +177,74 @@ export function PreSeasonForm({
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-1.5">
-            <label className="text-sm text-[var(--text-secondary)] font-medium flex items-center justify-between">
-              <span>ฤดูกาล (Season) <span className="text-red-500">*</span></span>
-              {errors.season && <span className="text-xs text-red-500 font-normal">{errors.season}</span>}
-            </label>
-            <input
-              type="text"
-              name="season"
-              list="seasons-list"
-              defaultValue={stat?.season ?? suggestedSeason}
-              onChange={() => clearFieldError("season")}
-              placeholder="2024/25"
-              className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border transition-all placeholder:text-gray-500 focus:outline-none ${
-                errors.season
-                  ? "border-red-500 ring-2 ring-red-500/10 focus:border-red-500"
-                  : "border-white/5 focus:border-[var(--barca-gold)]"
-              }`}
-            />
-            <datalist id="seasons-list">
-              <option value="2026/27">2026/27</option>
-              <option value="2025/26">2025/26</option>
-              <option value="2024/25">2024/25</option>
-              <option value="2023/24">2023/24</option>
-              <option value="2022/23">2022/23</option>
-            </datalist>
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-[var(--text-secondary)] font-medium">
+                ฤดูกาล (Season) <span className="text-red-500">*</span>
+              </label>
+              {isCustomSeason ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCustomSeason(false);
+                    handleSeasonSelectChange(suggestedSeason || "2026/27");
+                  }}
+                  className="text-xs text-[var(--barca-gold)] hover:underline cursor-pointer"
+                >
+                  เลือกจากรายการ
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => handleSeasonSelectChange("CUSTOM")}
+                  className="text-xs text-[var(--barca-gold)] hover:underline cursor-pointer"
+                >
+                  + กรอกเอง
+                </button>
+              )}
+            </div>
+
+            {isCustomSeason ? (
+              <input
+                type="text"
+                name="season"
+                value={season}
+                onChange={(e) => handleCustomSeasonChange(e.target.value)}
+                placeholder="เช่น 2026/27"
+                autoFocus
+                className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border transition-all placeholder:text-gray-500 focus:outline-none ${
+                  errors.season
+                    ? "border-red-500 ring-2 ring-red-500/10 focus:border-red-500"
+                    : "border-white/5 focus:border-[var(--barca-gold)]"
+                }`}
+              />
+            ) : (
+              <CustomSelect
+                name="season"
+                value={season}
+                placeholder="-- เลือกฤดูกาล (Season) --"
+                options={SEASON_OPTIONS}
+                size="md"
+                onChange={(val) => handleSeasonSelectChange(val)}
+                className={`w-full ${errors.season ? "ring-2 ring-red-500/20 rounded-xl" : ""}`}
+              />
+            )}
+            {errors.season && <span className="text-xs text-red-500 block">{errors.season}</span>}
           </div>
 
           <div className="space-y-1.5">
             <label className="text-sm text-[var(--text-secondary)] font-medium flex items-center justify-between">
-              <span>ปี (Year) <span className="text-red-500">*</span></span>
+              <span>ปี ค.ศ. (Year) <span className="text-red-500">*</span></span>
               {errors.year && <span className="text-xs text-red-500 font-normal">{errors.year}</span>}
             </label>
             <input
               type="number"
               name="year"
-              defaultValue={stat?.year ?? currentYear}
-              onChange={() => clearFieldError("year")}
-              placeholder="2024"
+              value={year}
+              onChange={(e) => {
+                setYear(e.target.value);
+                clearFieldError("year");
+              }}
+              placeholder="2026"
               className={`w-full bg-[var(--surface-3)] text-white px-4 py-2.5 rounded-xl border transition-all placeholder:text-gray-500 focus:outline-none ${
                 errors.year
                   ? "border-red-500 ring-2 ring-red-500/10 focus:border-red-500"
@@ -263,7 +353,7 @@ export function PreSeasonForm({
       {/* Buttons */}
       <div className="pt-6 border-t border-[rgba(0,77,152,0.1)] flex items-center justify-end gap-3">
         <Link
-          href={`/admin/players/${playerId}/stats`}
+          href="/admin/stats"
           className="px-5 py-2.5 rounded-xl text-xs font-semibold text-[#354875] bg-gray-100 hover:bg-gray-200 hover:text-[#0B1F40] border border-gray-200 transition-all"
         >
           ยกเลิก

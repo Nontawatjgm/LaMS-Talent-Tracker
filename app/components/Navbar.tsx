@@ -90,17 +90,17 @@ export default function Navbar({ players }: { players: Player[] }) {
             </div>
 
             {/* 2. Middle - Links (Flex centered) */}
-            <div className="flex-none hidden md:flex items-center justify-center gap-1">
+            <div className="flex-none hidden md:flex items-center justify-center gap-1 bg-white/[0.03] p-1 rounded-2xl border border-white/[0.06] backdrop-blur-md">
               {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`w-28 text-center py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    className={`w-28 text-center py-2 rounded-xl text-sm transition-all duration-200 ${
                       isActive
-                        ? "bg-[var(--surface-3)] text-white"
-                        : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface-2)]"
+                        ? "bg-white/[0.1] text-white font-bold shadow-xs border border-white/15"
+                        : "text-[var(--text-secondary)] hover:text-white hover:bg-white/[0.05] font-medium"
                     }`}
                   >
                     {link.label}
@@ -135,13 +135,13 @@ export default function Navbar({ players }: { players: Player[] }) {
                 </span>
               </button>
 
-              {/* Barça badge pill */}
-              <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full glass text-xs text-[var(--text-secondary)]">
-                <span
-                  className="w-2 h-2 rounded-full animate-pulse-glow inline-block shrink-0"
-                  style={{ background: "var(--barca-crimson)" }}
-                />
-                <span>2026/27</span>
+              {/* Barça badge pill — Blaugrana Dual Dots */}
+              <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs text-[#CBD5E1] shadow-xs">
+                <span className="flex items-center -space-x-0.5 shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#A2001D]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#004D98]" />
+                </span>
+                <span className="font-bold text-white">2026/27</span>
               </div>
 
               {/* Admin Portal Button */}

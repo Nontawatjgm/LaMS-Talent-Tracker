@@ -43,7 +43,7 @@ export default async function EditPreSeasonPage(props: EditPreSeasonPageProps) {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="space-y-2">
-        <AdminBackButton href={`/admin/players/${id}/stats`} label="กลับหน้าสถิตินักเตะ" />
+        <AdminBackButton href="/admin/stats" label="กลับหน้ารวมสถิติ" />
         <div>
           <h1 className="text-2xl font-display font-bold text-[var(--text-primary)]">
             แก้ไขสถิติพรีซีซั่น: {player.name}

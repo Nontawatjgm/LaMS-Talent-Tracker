@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { Player, Position, Status } from "@/types/player";
 import PlayerCard from "@/app/components/PlayerCard";
+import { CustomSelect } from "@/app/components/CustomSelect";
 
 export default function TimelineClient({ players }: { players: Player[] }) {
   const searchParams = useSearchParams();
@@ -39,6 +40,32 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
   "2023/24": { bg: "rgba(237, 187, 0, 0.08)", accent: "#EDBB00" },
 };
 
+const POSITION_ORDER: Record<string, number> = {
+  GK: 1,
+  DEF: 2,
+  CB: 2,
+  LB: 2,
+  RB: 2,
+  MID: 3,
+  CDM: 3,
+  CM: 3,
+  CAM: 3,
+  FWD: 4,
+  LW: 4,
+  RW: 4,
+  ST: 4,
+};
+
+type TimelineSortOption = "minutes" | "appearances" | "goals" | "position" | "name";
+
+const sortOptions: { value: TimelineSortOption; label: string }[] = [
+  { value: "minutes", label: "⏱️ นาทีที่ลงเล่น (มากสุด)" },
+  { value: "appearances", label: "🏟️ นัดที่ลงเล่น (มากสุด)" },
+  { value: "goals", label: "⚽ ประตู (มากสุด)" },
+  { value: "position", label: "🛡️ ผังตำแหน่ง (GK → FWD)" },
+  { value: "name", label: "🔤 ชื่อนักเตะ (A-Z)" },
+];
+
   const initialStatus = (searchParams.get("status") as Status) || "ALL";
   const initialSeason = searchParams.get("season") || "ALL";
   const initialPos = (searchParams.get("position") as Position) || "ALL";
@@ -48,6 +75,7 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
   const [selectedPosition, setSelectedPosition] = useState<Position | "ALL">(initialPos);
   const [selectedStatus, setSelectedStatus] = useState<Status | "ALL">(initialStatus);
   const [searchQuery, setSearchQuery] = useState(initialQ);
+  const [sortBy, setSortBy] = useState<TimelineSortOption>("minutes");
 
   // Sync state if URL query params change (e.g. user navigates from homepage links)
   useEffect(() => {
@@ -95,19 +123,70 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
     });
   }, [filteredBySeason, selectedPosition, selectedStatus, searchQuery]);
 
-  // Group by season
+  // Group by season and sort players within each season based on pre-season stats
   const groupedBySeason = useMemo(() => {
     const seasons =
       selectedSeason === "ALL" ? allSeasons : [selectedSeason];
     return seasons
-      .map((season) => ({
-        season,
-        players: filteredPlayers.filter((p) =>
+      .map((season) => {
+        const seasonPlayers = filteredPlayers.filter((p) =>
           p.preSeasons && p.preSeasons.some((ps) => ps.season === season)
-        ),
-      }))
+        );
+
+        // Sort players within this specific season
+        seasonPlayers.sort((a, b) => {
+          const aPs = a.preSeasons?.find((ps) => ps.season === season);
+          const bPs = b.preSeasons?.find((ps) => ps.season === season);
+
+          const aMins = aPs?.minutesPlayed ?? 0;
+          const bMins = bPs?.minutesPlayed ?? 0;
+          const aApps = aPs?.appearances ?? 0;
+          const bApps = bPs?.appearances ?? 0;
+          const aGoals = aPs?.goals ?? 0;
+          const bGoals = bPs?.goals ?? 0;
+          const aAssists = aPs?.assists ?? 0;
+          const bAssists = bPs?.assists ?? 0;
+
+          if (sortBy === "minutes") {
+            if (bMins !== aMins) return bMins - aMins;
+            if (bApps !== aApps) return bApps - aApps;
+            if ((bGoals + bAssists) !== (aGoals + aAssists)) return (bGoals + bAssists) - (aGoals + aAssists);
+            return (POSITION_ORDER[a.position] || 99) - (POSITION_ORDER[b.position] || 99);
+          }
+
+          if (sortBy === "appearances") {
+            if (bApps !== aApps) return bApps - aApps;
+            if (bMins !== aMins) return bMins - aMins;
+            if ((bGoals + bAssists) !== (aGoals + aAssists)) return (bGoals + bAssists) - (aGoals + aAssists);
+            return (POSITION_ORDER[a.position] || 99) - (POSITION_ORDER[b.position] || 99);
+          }
+
+          if (sortBy === "goals") {
+            if (bGoals !== aGoals) return bGoals - aGoals;
+            if (bAssists !== aAssists) return bAssists - aAssists;
+            return bMins - aMins;
+          }
+
+          if (sortBy === "position") {
+            const posDiff = (POSITION_ORDER[a.position] || 99) - (POSITION_ORDER[b.position] || 99);
+            if (posDiff !== 0) return posDiff;
+            return bMins - aMins;
+          }
+
+          if (sortBy === "name") {
+            return a.name.localeCompare(b.name);
+          }
+
+          return 0;
+        });
+
+        return {
+          season,
+          players: seasonPlayers,
+        };
+      })
       .filter((group) => group.players.length > 0);
-  }, [filteredPlayers, selectedSeason]);
+  }, [filteredPlayers, selectedSeason, allSeasons, sortBy]);
 
   const playersWithoutPreseason = useMemo(() => {
     return filteredPlayers.filter((p) => !p.preSeasons || p.preSeasons.length === 0);
@@ -206,28 +285,37 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
             </div>
 
             {/* Position filter */}
-            <select
+            <CustomSelect
               id="filter-position"
               value={selectedPosition}
-              onChange={(e) => setSelectedPosition(e.target.value as Position | "ALL")}
-              className="dark-select py-2 px-3 text-xs"
-            >
-              {positions.map((p) => (
-                <option key={p.value} value={p.value} className="bg-[var(--surface-3)] text-white">{p.label}</option>
-              ))}
-            </select>
+              onChange={(val) => setSelectedPosition(val as Position | "ALL")}
+              options={positions.map((p) => ({ value: p.value, label: p.label }))}
+              variant="dark"
+              size="sm"
+              minMenuWidth="min-w-[160px]"
+            />
 
             {/* Status filter */}
-            <select
+            <CustomSelect
               id="filter-status"
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value as Status | "ALL")}
-              className="dark-select py-2 px-3 text-xs"
-            >
-              {statuses.map((s) => (
-                <option key={s.value} value={s.value} className="bg-[var(--surface-3)] text-white">{s.label}</option>
-              ))}
-            </select>
+              onChange={(val) => setSelectedStatus(val as Status | "ALL")}
+              options={statuses.map((s) => ({ value: s.value, label: s.label }))}
+              variant="dark"
+              size="sm"
+              minMenuWidth="min-w-[170px]"
+            />
+
+            {/* Sort By Filter */}
+            <CustomSelect
+              id="filter-sort"
+              value={sortBy}
+              onChange={(val) => setSortBy(val as TimelineSortOption)}
+              options={sortOptions.map((opt) => ({ value: opt.value, label: opt.label }))}
+              variant="dark"
+              size="sm"
+              minMenuWidth="min-w-[220px]"
+            />
           </div>
 
           {/* Result count & Active Filter Pills */}
@@ -247,7 +335,7 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
                 </span>
               )}
               {selectedPosition !== "ALL" && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-purple-500/20 border border-purple-500/30 text-purple-200 text-[11px]">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/20 text-white text-[11px]">
                   ตำแหน่ง: {positions.find(p => p.value === selectedPosition)?.label}
                 </span>
               )}
@@ -258,13 +346,14 @@ const seasonColors: Record<string, { bg: string; accent: string }> = {
               )}
             </div>
 
-            {(selectedStatus !== "ALL" || selectedSeason !== "ALL" || selectedPosition !== "ALL" || searchQuery) && (
+            {(selectedStatus !== "ALL" || selectedSeason !== "ALL" || selectedPosition !== "ALL" || searchQuery || sortBy !== "minutes") && (
               <button
                 onClick={() => {
                   setSelectedStatus("ALL");
                   setSelectedSeason("ALL");
                   setSelectedPosition("ALL");
                   setSearchQuery("");
+                  setSortBy("minutes");
                 }}
                 className="text-xs text-[var(--barca-gold)] hover:text-white transition-colors underline cursor-pointer"
               >

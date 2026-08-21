@@ -39,9 +39,11 @@ export async function createPreSeason(playerId: string, formData: FormData) {
   revalidatePath(`/players/${playerId}`);
   revalidatePath("/compare");
   revalidatePath("/timeline");
+  revalidatePath("/players");
+  revalidatePath("/admin/stats");
   revalidatePath(`/admin/players/${playerId}/stats`);
   
-  redirect(`/admin/players/${playerId}/stats?toast=stat_created&season=${encodeURIComponent(data.season)}`);
+  redirect(`/admin/stats?toast=stat_created&season=${encodeURIComponent(data.season)}`);
 }
 
 export async function updatePreSeason(playerId: string, statId: string, formData: FormData) {
@@ -78,9 +80,11 @@ export async function updatePreSeason(playerId: string, statId: string, formData
   revalidatePath(`/players/${playerId}`);
   revalidatePath("/compare");
   revalidatePath("/timeline");
+  revalidatePath("/players");
+  revalidatePath("/admin/stats");
   revalidatePath(`/admin/players/${playerId}/stats`);
   
-  redirect(`/admin/players/${playerId}/stats?toast=stat_updated&season=${encodeURIComponent(data.season)}`);
+  redirect(`/admin/stats?toast=stat_updated&season=${encodeURIComponent(data.season)}`);
 }
 
 export async function deletePreSeason(playerId: string, statId: string) {
@@ -100,5 +104,7 @@ export async function deletePreSeason(playerId: string, statId: string) {
   revalidatePath(`/players/${playerId}`);
   revalidatePath("/compare");
   revalidatePath("/timeline");
+  revalidatePath("/players");
+  revalidatePath("/admin/stats");
   revalidatePath(`/admin/players/${playerId}/stats`);
 }

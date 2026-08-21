@@ -7,6 +7,7 @@ import type { Player, Position, Status } from "@/types/player";
 import PlayerCard from "@/app/components/PlayerCard";
 import { FlagIcon } from "@/app/components/FlagIcon";
 import { PositionBadge, StatusBadge } from "@/app/components/StatusBadge";
+import { CustomSelect } from "@/app/components/CustomSelect";
 
 interface PlayersClientProps {
   players: Player[];
@@ -35,6 +36,23 @@ export default function PlayersClient({ players }: PlayersClientProps) {
   const [selectedNationality, setSelectedNationality] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<string>(initialSort);
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
+
+  // Load saved view mode from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("players_directory_view_mode") as "grid" | "table" | null;
+      if (saved === "grid" || saved === "table") {
+        setViewMode(saved);
+      }
+    } catch {}
+  }, []);
+
+  const handleViewModeChange = (mode: "grid" | "table") => {
+    setViewMode(mode);
+    try {
+      localStorage.setItem("players_directory_view_mode", mode);
+    } catch {}
+  };
 
   // Sync state if URL query params change
   useEffect(() => {
@@ -249,68 +267,71 @@ export default function PlayersClient({ players }: PlayersClientProps) {
             {/* Dropdown Filters */}
             <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
               {/* Position Filter */}
-              <select
+              <CustomSelect
                 id="filter-position"
                 value={selectedPosition}
-                onChange={(e) => setSelectedPosition(e.target.value as Position | "ALL")}
-                className="dark-select py-2 px-3 text-xs flex-1 sm:flex-none"
-              >
-                {positions.map((p) => (
-                  <option key={p.value} value={p.value} className="bg-[var(--surface-3)] text-white">
-                    {p.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setSelectedPosition(val as Position | "ALL")}
+                options={positions.map((p) => ({ value: p.value, label: p.label }))}
+                variant="dark"
+                size="sm"
+                className="flex-1 sm:flex-none"
+                minMenuWidth="min-w-[160px]"
+              />
 
               {/* Status Filter */}
-              <select
+              <CustomSelect
                 id="filter-status"
                 value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value as Status | "ALL")}
-                className="dark-select py-2 px-3 text-xs flex-1 sm:flex-none"
-              >
-                {statuses.map((s) => (
-                  <option key={s.value} value={s.value} className="bg-[var(--surface-3)] text-white">
-                    {s.label}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setSelectedStatus(val as Status | "ALL")}
+                options={statuses.map((s) => ({ value: s.value, label: s.label }))}
+                variant="dark"
+                size="sm"
+                className="flex-1 sm:flex-none"
+                minMenuWidth="min-w-[170px]"
+              />
 
               {/* Nationality Filter */}
-              <select
+              <CustomSelect
                 id="filter-nationality"
                 value={selectedNationality}
-                onChange={(e) => setSelectedNationality(e.target.value)}
-                className="dark-select py-2 px-3 text-xs flex-1 sm:flex-none"
-              >
-                <option value="ALL" className="bg-[var(--surface-3)] text-white">ทุกสัญชาติ ({nationalities.length - 1})</option>
-                {nationalities.filter(n => n !== "ALL").map((n) => (
-                  <option key={n} value={n} className="bg-[var(--surface-3)] text-white">
-                    {n}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => setSelectedNationality(val)}
+                options={[
+                  { value: "ALL", label: `ทุกสัญชาติ (${nationalities.length - 1})` },
+                  ...nationalities.filter((n) => n !== "ALL").map((n) => ({
+                    value: n,
+                    label: n,
+                  })),
+                ]}
+                variant="dark"
+                size="sm"
+                className="flex-1 sm:flex-none"
+                minMenuWidth="min-w-[170px]"
+              />
 
               {/* Sort By */}
-              <select
+              <CustomSelect
                 id="filter-sort"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="dark-select py-2 px-3 text-xs flex-1 sm:flex-none"
-              >
-                <option value="name_asc" className="bg-[var(--surface-3)] text-white">เรียงตาม: ชื่อ (A-Z)</option>
-                <option value="name_desc" className="bg-[var(--surface-3)] text-white">เรียงตาม: ชื่อ (Z-A)</option>
-                <option value="age_asc" className="bg-[var(--surface-3)] text-white">เรียงตาม: อายุน้อยสุด</option>
-                <option value="age_desc" className="bg-[var(--surface-3)] text-white">เรียงตาม: อายุมากสุด</option>
-                <option value="lamasia_desc" className="bg-[var(--surface-3)] text-white">เรียงตาม: เข้า La Masia ล่าสุด</option>
-                <option value="apps_desc" className="bg-[var(--surface-3)] text-white">เรียงตาม: นัดที่ลงเล่นพรีซีซั่น</option>
-              </select>
+                onChange={(val) => setSortBy(val)}
+                options={[
+                  { value: "name_asc", label: "เรียงตาม: ชื่อ (A-Z)" },
+                  { value: "name_desc", label: "เรียงตาม: ชื่อ (Z-A)" },
+                  { value: "age_asc", label: "เรียงตาม: อายุน้อยสุด" },
+                  { value: "age_desc", label: "เรียงตาม: อายุมากสุด" },
+                  { value: "lamasia_desc", label: "เรียงตาม: เข้า La Masia ล่าสุด" },
+                  { value: "apps_desc", label: "เรียงตาม: นัดที่ลงเล่นพรีซีซั่น" },
+                ]}
+                variant="dark"
+                size="sm"
+                className="flex-1 sm:flex-none"
+                minMenuWidth="min-w-[210px]"
+              />
 
               {/* View Mode Toggle */}
               <div className="hidden sm:flex items-center rounded-xl bg-[var(--surface-3)] p-1 border border-white/5">
                 <button
-                  onClick={() => setViewMode("grid")}
-                  className={`p-1.5 rounded-lg transition-colors ${
+                  onClick={() => handleViewModeChange("grid")}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                     viewMode === "grid" ? "bg-white/15 text-white" : "text-gray-400 hover:text-white"
                   }`}
                   title="Grid View"
@@ -320,8 +341,8 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                   </svg>
                 </button>
                 <button
-                  onClick={() => setViewMode("table")}
-                  className={`p-1.5 rounded-lg transition-colors ${
+                  onClick={() => handleViewModeChange("table")}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                     viewMode === "table" ? "bg-white/15 text-white" : "text-gray-400 hover:text-white"
                   }`}
                   title="Table View"
@@ -346,7 +367,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                 </span>
               )}
               {selectedPosition !== "ALL" && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-purple-500/20 border border-purple-500/30 text-purple-200 text-[11px]">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/20 text-white text-[11px]">
                   ตำแหน่ง: {positions.find(p => p.value === selectedPosition)?.label}
                 </span>
               )}
@@ -439,8 +460,8 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                                 {player.name}
                               </div>
                               {player.jerseyNumber && (
-                                <div className="text-[11px] text-[var(--text-muted)]">
-                                  เบอร์ #{player.jerseyNumber}
+                                <div className="text-[11px] text-[var(--barca-gold)] font-mono font-medium">
+                                  #{player.jerseyNumber}
                                 </div>
                               )}
                             </div>

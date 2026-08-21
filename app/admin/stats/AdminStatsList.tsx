@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import Link from "next/link";
 import type { Player } from "@/types/player";
 import { StatusBadge, PositionBadge } from "@/app/components/StatusBadge";
@@ -53,8 +53,8 @@ const POSITION_ORDER: Record<string, number> = {
 };
 
 const POSITION_GRADIENT: Record<string, string> = {
-  GK: "linear-gradient(135deg, #EDBB00, #F59E0B)",
-  DEF: "linear-gradient(135deg, #7C3AED, #A78BFA)",
+  GK: "linear-gradient(135deg, #059669, #10B981)",
+  DEF: "linear-gradient(135deg, #EDBB00, #F59E0B)",
   MID: "linear-gradient(135deg, #004D98, #0060BA)",
   FWD: "linear-gradient(135deg, #A2001D, #D4002A)",
 };
@@ -72,14 +72,14 @@ const POSITION_SECTIONS: PositionSectionConfig[] = [
     key: "GK",
     name: "ผู้รักษาประตู",
     nameEn: "Goalkeepers",
-    dotColor: "#EDBB00",
+    dotColor: "#10B981",
     positions: ["GK"],
   },
   {
     key: "DEF",
     name: "กองหลัง",
     nameEn: "Defenders",
-    dotColor: "#7C3AED",
+    dotColor: "#EDBB00",
     positions: ["CB", "LB", "RB", "DEF"],
   },
   {
@@ -114,6 +114,23 @@ export default function AdminStatsList({ initialPlayers }: AdminStatsListProps) 
   const [positionFilter, setPositionFilter] = useState<string>("all");
   const [sortBy, setSortBy] = useState<SortOption>("position");
   const [viewMode, setViewMode] = useState<ViewMode>("table");
+
+  // Load saved view mode from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("admin_stats_view_mode") as ViewMode | null;
+      if (saved === "table" || saved === "grid") {
+        setViewMode(saved);
+      }
+    } catch {}
+  }, []);
+
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    try {
+      localStorage.setItem("admin_stats_view_mode", mode);
+    } catch {}
+  };
 
   const filteredPlayers = initialPlayers.filter((player) => {
     const q = searchQuery.toLowerCase().trim();
@@ -249,7 +266,7 @@ export default function AdminStatsList({ initialPlayers }: AdminStatsListProps) 
             <div className="flex items-center bg-[var(--surface-3)] rounded-xl border border-white/10 p-1 gap-0.5">
               <button
                 type="button"
-                onClick={() => setViewMode("table")}
+                onClick={() => handleViewModeChange("table")}
                 title="มุมมองตาราง"
                 className={`p-1.5 rounded-lg transition-all ${
                   viewMode === "table"
@@ -263,7 +280,7 @@ export default function AdminStatsList({ initialPlayers }: AdminStatsListProps) 
               </button>
               <button
                 type="button"
-                onClick={() => setViewMode("grid")}
+                onClick={() => handleViewModeChange("grid")}
                 title="มุมมองการ์ด"
                 className={`p-1.5 rounded-lg transition-all ${
                   viewMode === "grid"

@@ -19,44 +19,44 @@ const statusConfig: Record<
   promoted: {
     label: "First Team",
     dotColor: "bg-[#A2001D]",
-    bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-[#004D98] dark:text-blue-300 font-bold",
-    borderClass: "border-transparent",
+    bgClass: "bg-[#FDF2F4] dark:bg-rose-950/40",
+    textClass: "text-[#A2001D] dark:text-rose-300 font-extrabold",
+    borderClass: "border border-[#A2001D]/35 dark:border-rose-500/40 shadow-xs",
   },
   barca_atletic: {
     label: "Barça Atlètic",
     dotColor: "bg-[#004D98]",
-    bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-[#004D98] dark:text-blue-300 font-bold",
-    borderClass: "border-[#004D98]/30 dark:border-blue-500/40 shadow-xs",
+    bgClass: "bg-[#EFF6FF] dark:bg-blue-950/40",
+    textClass: "text-[#004D98] dark:text-blue-300 font-extrabold",
+    borderClass: "border border-[#004D98]/35 dark:border-blue-500/40 shadow-xs",
   },
   juvenil_a: {
     label: "Juvenil (U19)",
-    dotColor: "bg-purple-600",
-    bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-purple-700 dark:text-purple-300 font-bold",
-    borderClass: "border-purple-300/80 dark:border-purple-500/40 shadow-xs",
+    dotColor: "bg-[#D97706]",
+    bgClass: "bg-[#FFFBEB] dark:bg-amber-950/40",
+    textClass: "text-[#92400E] dark:text-amber-300 font-extrabold",
+    borderClass: "border border-amber-400/40 dark:border-amber-500/40 shadow-xs",
   },
   academy: {
     label: "Barça Atlètic",
     dotColor: "bg-[#004D98]",
-    bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-[#004D98] dark:text-blue-300 font-bold",
-    borderClass: "border-[#004D98]/30 dark:border-blue-500/40 shadow-xs",
+    bgClass: "bg-[#EFF6FF] dark:bg-blue-950/40",
+    textClass: "text-[#004D98] dark:text-blue-300 font-extrabold",
+    borderClass: "border border-[#004D98]/35 dark:border-blue-500/40 shadow-xs",
   },
   loaned: {
     label: "Loaned",
     dotColor: "bg-amber-500",
-    bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-amber-700 dark:text-amber-300 font-bold",
-    borderClass: "border-amber-300/80 dark:border-amber-500/40 shadow-xs",
+    bgClass: "bg-amber-50 dark:bg-amber-950/40",
+    textClass: "text-amber-800 dark:text-amber-300 font-bold",
+    borderClass: "border border-amber-300 dark:border-amber-500/40 shadow-xs",
   },
   released: {
     label: "Released",
     dotColor: "bg-rose-500",
-    bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-rose-700 dark:text-rose-300 font-bold",
-    borderClass: "border-rose-300/80 dark:border-rose-500/40 shadow-xs",
+    bgClass: "bg-rose-50 dark:bg-rose-950/40",
+    textClass: "text-rose-800 dark:text-rose-300 font-bold",
+    borderClass: "border border-rose-300 dark:border-rose-500/40 shadow-xs",
   },
   transferred: {
     label: "Transferred",
@@ -81,32 +81,32 @@ const positionConfig: Record<
   GK: {
     label: "GK",
     bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-amber-700 dark:text-amber-300",
-    borderClass: "border-amber-300/80 dark:border-amber-500/40 shadow-xs",
+    textClass: "text-emerald-700 dark:text-emerald-400",
+    borderClass: "border-emerald-300/80 dark:border-emerald-500/40 shadow-xs",
   },
   CB: {
     label: "CB",
     bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-purple-700 dark:text-purple-300",
-    borderClass: "border-purple-300/80 dark:border-purple-500/40 shadow-xs",
+    textClass: "text-amber-700 dark:text-amber-300",
+    borderClass: "border-amber-300/80 dark:border-amber-500/40 shadow-xs",
   },
   LB: {
     label: "LB",
     bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-purple-700 dark:text-purple-300",
-    borderClass: "border-purple-300/80 dark:border-purple-500/40 shadow-xs",
+    textClass: "text-amber-700 dark:text-amber-300",
+    borderClass: "border-amber-300/80 dark:border-amber-500/40 shadow-xs",
   },
   RB: {
     label: "RB",
     bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-purple-700 dark:text-purple-300",
-    borderClass: "border-purple-300/80 dark:border-purple-500/40 shadow-xs",
+    textClass: "text-amber-700 dark:text-amber-300",
+    borderClass: "border-amber-300/80 dark:border-amber-500/40 shadow-xs",
   },
   DEF: {
     label: "DEF",
     bgClass: "bg-white dark:bg-gray-900",
-    textClass: "text-purple-700 dark:text-purple-300",
-    borderClass: "border-purple-300/80 dark:border-purple-500/40 shadow-xs",
+    textClass: "text-amber-700 dark:text-amber-300",
+    borderClass: "border-amber-300/80 dark:border-amber-500/40 shadow-xs",
   },
   CDM: {
     label: "CDM",
@@ -160,38 +160,29 @@ const positionConfig: Record<
 
 export function StatusBadge({ status, size = "sm", className = "" }: StatusBadgeProps) {
   const config = statusConfig[status] || statusConfig.barca_atletic;
-  const widthClass = size === "sm" ? "w-[100px]" : "w-[116px]";
+  const widthClass = size === "sm" ? "w-[102px]" : "w-[118px]";
+  const padding = size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs";
 
-  // Flagship: Iconic Blaugrana Gradient Border + Gradient Text for First Team
   if (status === "promoted") {
-    const innerPadding = size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-xs";
     return (
       <span
-        className={`inline-flex ${widthClass} p-[1.25px] rounded-full bg-gradient-to-r from-[#A2001D] via-[#7B1020] to-[#004D98] shadow-xs shrink-0 ${className}`}
+        className={`inline-flex ${widthClass} items-center justify-center gap-1.5 rounded-full shrink-0 ${padding} ${config.bgClass} ${config.textClass} ${config.borderClass} ${className}`}
       >
-        <span
-          className={`w-full flex items-center justify-center gap-1.5 rounded-full bg-white dark:bg-gray-900 ${innerPadding}`}
-        >
-          <span className="flex items-center -space-x-0.5 shrink-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#A2001D] ring-1 ring-white dark:ring-gray-900" />
-            <span className="w-1.5 h-1.5 rounded-full bg-[#004D98] ring-1 ring-white dark:ring-gray-900" />
-          </span>
-          <span className="bg-gradient-to-r from-[#A2001D] via-[#5C0A18] to-[#004D98] bg-clip-text text-transparent font-extrabold tracking-tight whitespace-nowrap">
-            First Team
-          </span>
+        <span className="flex items-center -space-x-0.5 shrink-0">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#A2001D] ring-1 ring-white dark:ring-gray-900" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#004D98] ring-1 ring-white dark:ring-gray-900" />
         </span>
+        <span className="whitespace-nowrap font-extrabold">{config.label}</span>
       </span>
     );
   }
 
-  const padding = size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-xs";
-
   return (
     <span
-      className={`inline-flex ${widthClass} items-center justify-center gap-1.5 rounded-full font-semibold border shrink-0 ${padding} ${config.bgClass} ${config.textClass} ${config.borderClass} ${className}`}
+      className={`inline-flex ${widthClass} items-center justify-center gap-1.5 rounded-full shrink-0 ${padding} ${config.bgClass} ${config.textClass} ${config.borderClass} ${className}`}
     >
       <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${config.dotColor} ring-1 ring-white dark:ring-gray-900`} />
-      <span className="whitespace-nowrap">{config.label}</span>
+      <span className="whitespace-nowrap font-extrabold">{config.label}</span>
     </span>
   );
 }

@@ -106,7 +106,7 @@ export default function CompareClient({ players }: { players: Player[] }) {
       </div>
 
       {/* Selectors */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 animate-fade-in-up delay-100">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 animate-fade-in relative z-30">
         <PlayerSelect
           label="นักเตะคนที่ 1 (สีแดง)"
           players={players.filter(p => p.id !== p2Id)}
@@ -122,13 +122,13 @@ export default function CompareClient({ players }: { players: Player[] }) {
       </div>
 
       {/* Profile Summaries */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 animate-fade-in-up delay-200">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 animate-fade-in relative z-10">
         <PlayerProfileSummary player={player1} />
         <PlayerProfileSummary player={player2} alignRight />
       </div>
 
       {/* Stats Comparison */}
-      <div className="animate-fade-in-up delay-300">
+      <div className="animate-fade-in">
         <CompareStats player1={player1} player2={player2} />
       </div>
     </div>

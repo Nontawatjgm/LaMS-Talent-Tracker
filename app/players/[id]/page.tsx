@@ -116,8 +116,10 @@ export default async function PlayerProfilePage(props: PageProps<"/players/[id]"
               ) : (
                 <span className="relative z-10">{getInitials(player.name)}</span>
               )}
-              {!player.imageUrl && player.jerseyNumber && (
-                <span className="absolute bottom-2 right-2 text-sm font-black opacity-30">
+              {player.jerseyNumber && (
+                <span
+                  className="absolute bottom-1.5 right-2 text-sm sm:text-base font-black font-display tracking-tight text-[#EDBB00] drop-shadow-[0_2px_4px_rgba(0,0,0,0.95)] select-none"
+                >
                   #{player.jerseyNumber}
                 </span>
               )}
@@ -205,7 +207,7 @@ export default async function PlayerProfilePage(props: PageProps<"/players/[id]"
                   {player.currentClub ?? "FC Barcelona"}
                 </div>
                 {player.jerseyNumber && (
-                  <div className="stat-pill">
+                  <div className="stat-pill border-[#EDBB00]/30 text-[#EDBB00] bg-[#EDBB00]/10 font-mono font-bold">
                     #{player.jerseyNumber}
                   </div>
                 )}

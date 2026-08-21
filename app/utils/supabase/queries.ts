@@ -1,12 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import type { Player } from "@/types/player";
+import { unstable_cache } from "next/cache";
+import { cache } from "react";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export async function getPlayers(): Promise<Player[]> {
+async function fetchPlayersFromSupabase(): Promise<Player[]> {
   const { data: playersData, error } = await supabase
     .from("players")
     .select(`
@@ -21,7 +23,7 @@ export async function getPlayers(): Promise<Player[]> {
 
   const players = (playersData || []) as any[];
 
-  return players.map(p => ({
+  return players.map((p) => ({
     id: p.id,
     name: p.name,
     position: p.position,
@@ -49,7 +51,15 @@ export async function getPlayers(): Promise<Player[]> {
       goals: ps.goals,
       assists: ps.assists,
       notes: ps.notes,
-      tourLocation: ps.tour_location
-    }))
+      tourLocation: ps.tour_location,
+    })),
   })) as Player[];
 }
+
+export const getPlayers = cache(
+  unstable_cache(fetchPlayersFromSupabase, ["players-list"], {
+    tags: ["players"],
+    revalidate: 60,
+  })
+);
+
