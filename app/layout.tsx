@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Outfit, Prompt } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -13,6 +13,13 @@ const inter = Inter({
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-outfit",
+  display: "swap",
+});
+
+const prompt = Prompt({
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["thai", "latin"],
+  variable: "--font-prompt",
   display: "swap",
 });
 
@@ -37,7 +44,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="th"
-      className={`${inter.variable} ${outfit.variable}`}
+      className={`${inter.variable} ${outfit.variable} ${prompt.variable}`}
       suppressHydrationWarning
     >
       <body

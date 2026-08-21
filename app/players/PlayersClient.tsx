@@ -22,13 +22,23 @@ function getAge(dateOfBirth: string): number {
   return age;
 }
 
+const statusPriority: Record<string, number> = {
+  promoted: 1,
+  barca_atletic: 2,
+  juvenil_a: 3,
+  academy: 3,
+  loaned: 4,
+  transferred: 5,
+  released: 6,
+};
+
 export default function PlayersClient({ players }: PlayersClientProps) {
   const searchParams = useSearchParams();
 
   const initialStatus = (searchParams.get("status") as Status) || "ALL";
   const initialPos = (searchParams.get("position") as Position) || "ALL";
   const initialQ = searchParams.get("q") || "";
-  const initialSort = searchParams.get("sort") || "name_asc";
+  const initialSort = searchParams.get("sort") || "status_desc";
 
   const [searchQuery, setSearchQuery] = useState(initialQ);
   const [selectedPosition, setSelectedPosition] = useState<Position | "ALL">(initialPos);
@@ -81,12 +91,12 @@ export default function PlayersClient({ players }: PlayersClientProps) {
   // Statuses options
   const statuses: { value: Status | "ALL"; label: string }[] = [
     { value: "ALL", label: "ทุกสถานะ" },
-    { value: "promoted", label: "First Team ✦" },
-    { value: "barca_atletic", label: "Barça Atlètic ◈" },
-    { value: "juvenil_a", label: "Juvenil A (U19) ❖" },
-    { value: "loaned", label: "Loaned ↗" },
-    { value: "transferred", label: "Transferred ⇆" },
-    { value: "released", label: "Released ×" },
+    { value: "promoted", label: "First Team (ชุดใหญ่)" },
+    { value: "barca_atletic", label: "Barça Atlètic" },
+    { value: "juvenil_a", label: "Juvenil A (U19)" },
+    { value: "loaned", label: "Loaned (ยืมตัว)" },
+    { value: "transferred", label: "Transferred (ย้ายทีม)" },
+    { value: "released", label: "Released (หมดสัญญา)" },
   ];
 
   // Nationalities list
@@ -112,18 +122,31 @@ export default function PlayersClient({ players }: PlayersClientProps) {
     });
 
     // Sorting
-    return filtered.sort((a, b) => {
+    return [...filtered].sort((a, b) => {
+      if (sortBy === "status_desc") {
+        const priorityA = statusPriority[a.currentStatus] ?? 99;
+        const priorityB = statusPriority[b.currentStatus] ?? 99;
+        if (priorityA !== priorityB) {
+          return priorityA - priorityB;
+        }
+        // Tie-breaker within same status: pre-season minutes played descending, then name ascending
+        const minsA = (a.preSeasons || []).reduce((s, ps) => s + (ps.minutesPlayed || 0), 0);
+        const minsB = (b.preSeasons || []).reduce((s, ps) => s + (ps.minutesPlayed || 0), 0);
+        if (minsB !== minsA) return minsB - minsA;
+        return a.name.localeCompare(b.name);
+      }
       if (sortBy === "name_asc") return a.name.localeCompare(b.name);
       if (sortBy === "name_desc") return b.name.localeCompare(a.name);
+      if (sortBy === "apps_desc") {
+        const aApps = (a.preSeasons || []).reduce((s, ps) => s + (ps.appearances || 0), 0);
+        const bApps = (b.preSeasons || []).reduce((s, ps) => s + (ps.appearances || 0), 0);
+        if (bApps !== aApps) return bApps - aApps;
+        return a.name.localeCompare(b.name);
+      }
       if (sortBy === "age_asc") return getAge(a.dateOfBirth) - getAge(b.dateOfBirth);
       if (sortBy === "age_desc") return getAge(b.dateOfBirth) - getAge(a.dateOfBirth);
       if (sortBy === "lamasia_desc") return (b.lamasiaYear || 0) - (a.lamasiaYear || 0);
       if (sortBy === "lamasia_asc") return (a.lamasiaYear || 0) - (b.lamasiaYear || 0);
-      if (sortBy === "apps_desc") {
-        const aApps = (a.preSeasons || []).reduce((s, ps) => s + (ps.appearances || 0), 0);
-        const bApps = (b.preSeasons || []).reduce((s, ps) => s + (ps.appearances || 0), 0);
-        return bApps - aApps;
-      }
       return 0;
     });
   }, [players, selectedPosition, selectedStatus, selectedNationality, searchQuery, sortBy]);
@@ -133,6 +156,12 @@ export default function PlayersClient({ players }: PlayersClientProps) {
   const academyCount = useMemo(() => players.filter((p) => p.currentStatus === "barca_atletic" || p.currentStatus === "juvenil_a" || p.currentStatus === "academy").length, [players]);
   const loanedCount = useMemo(() => players.filter((p) => p.currentStatus === "loaned").length, [players]);
 
+  const avgAge = useMemo(() => {
+    if (!players.length) return "0";
+    const total = players.reduce((sum, p) => sum + getAge(p.dateOfBirth), 0);
+    return (total / players.length).toFixed(1);
+  }, [players]);
+
   const hasActiveFilters = selectedPosition !== "ALL" || selectedStatus !== "ALL" || selectedNationality !== "ALL" || searchQuery !== "";
 
   const clearAllFilters = () => {
@@ -140,87 +169,88 @@ export default function PlayersClient({ players }: PlayersClientProps) {
     setSelectedStatus("ALL");
     setSelectedNationality("ALL");
     setSearchQuery("");
-    setSortBy("name_asc");
+    setSortBy("status_desc");
   };
 
   return (
-    <div className="min-h-screen pb-20">
-      {/* ─── Header Section ─── */}
+    <div className="min-h-screen pb-20 bg-[#F8FAFD]">
+      {/* ─── Blaugrana Dual Mesh Banner + Quick Stats ─── */}
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden border-b border-white/[0.1]"
         style={{
           paddingTop: "90px",
-          background: "linear-gradient(160deg, rgba(0,77,152,0.18) 0%, rgba(6,6,15,0.95) 100%)",
-          borderBottom: "1px solid var(--border-subtle)",
+          background: "linear-gradient(135deg, #1C050B 0%, #0D162B 50%, #060E21 100%)",
         }}
       >
-        {/* Ambient glow */}
+        {/* Top subtle Blaugrana dual accent line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#A2001D] to-[#004D98] opacity-80" />
+
+        {/* Left Crimson Mesh Orb */}
         <div
-          className="hero-orb w-[400px] h-[400px] opacity-15 animate-float pointer-events-none"
+          className="absolute -top-10 -left-20 w-[450px] h-[350px] pointer-events-none opacity-45 filter blur-[100px]"
           style={{
-            background: "var(--barca-navy)",
-            top: "10%",
-            right: "-5%",
+            background: "radial-gradient(circle, #A2001D 0%, #4A000D 60%, transparent 80%)",
+          }}
+        />
+
+        {/* Right Royal Navy Mesh Orb */}
+        <div
+          className="absolute -top-10 -right-20 w-[550px] h-[400px] pointer-events-none opacity-50 filter blur-[110px]"
+          style={{
+            background: "radial-gradient(circle, #004D98 0%, #002244 60%, transparent 80%)",
+          }}
+        />
+
+        {/* Subtle dot matrix overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.12]"
+          style={{
+            backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
           }}
         />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass border border-white/10 text-xs font-semibold text-[var(--barca-gold)] mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--barca-gold)] animate-pulse-glow" />
-                La Masia Directory
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.08] backdrop-blur-md border border-white/20 text-xs font-semibold text-[#CBD5E1] mb-3.5 shadow-md">
+                <span className="flex items-center -space-x-0.5 shrink-0">
+                  <span className="w-2 h-2 rounded-full bg-[#A2001D] ring-1 ring-white/30" />
+                  <span className="w-2 h-2 rounded-full bg-[#004D98] ring-1 ring-white/30" />
+                </span>
+                <span>La Masia Directory</span>
               </div>
               <h1 className="font-display font-black text-3xl sm:text-5xl text-white tracking-tight">
                 ทำเนียบนักเตะทั้งหมด
               </h1>
-              <p className="text-[var(--text-secondary)] text-sm sm:text-base mt-2 max-w-2xl">
+              <p className="text-[#94A3B8] text-sm sm:text-base mt-3.5 max-w-2xl leading-relaxed">
                 รายชื่อนักเตะดาวรุ่งจากสถาบัน La Masia ทุกรุ่น ทั้งที่ขึ้นสู่ทีมชุดใหญ่และกำลังพัฒนาฝีเท้าในอคาเดมี
               </p>
             </div>
 
-            {/* Quick Filter Badges */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <button
-                onClick={() => setSelectedStatus("ALL")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
-                  selectedStatus === "ALL"
-                    ? "bg-white/15 text-white border-white/20 shadow-sm"
-                    : "glass text-[var(--text-muted)] border-white/5 hover:text-white"
-                }`}
-              >
-                ทั้งหมด ({players.length})
-              </button>
-              <button
-                onClick={() => setSelectedStatus("promoted")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
-                  selectedStatus === "promoted"
-                    ? "bg-[var(--barca-crimson)] text-white border-[var(--barca-crimson-light)] shadow-md"
-                    : "glass text-[var(--text-muted)] border-white/5 hover:text-white"
-                }`}
-              >
-                ✦ First Team ({promotedCount})
-              </button>
-              <button
-                onClick={() => setSelectedStatus("barca_atletic")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
-                  selectedStatus === "barca_atletic"
-                    ? "bg-[var(--barca-navy)] text-white border-[var(--barca-navy-light)] shadow-md"
-                    : "glass text-[var(--text-muted)] border-white/5 hover:text-white"
-                }`}
-              >
-                ◈ Barça Atlètic
-              </button>
-              <button
-                onClick={() => setSelectedStatus("juvenil_a")}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
-                  selectedStatus === "juvenil_a"
-                    ? "bg-purple-600 text-white border-purple-400 shadow-md"
-                    : "glass text-[var(--text-muted)] border-white/5 hover:text-white"
-                }`}
-              >
-                ❖ Juvenil A
-              </button>
+            {/* Quick Stat Summary Cards (Glassmorphism Dark - Equal Width & Vibrant Dots) */}
+            <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+              <div className="min-w-[134px] px-4 py-2.5 rounded-2xl bg-white/[0.07] border border-white/15 backdrop-blur-md shadow-xl hover:border-white/25 transition-all flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#0060BA] ring-2 ring-blue-400/60 shadow-[0_0_8px_rgba(0,96,186,0.5)] shrink-0" />
+                <div>
+                  <span className="block text-[11px] font-semibold text-[#94A3B8]">นักเตะทั้งหมด</span>
+                  <span className="text-base font-black font-display text-white">{players.length} คน</span>
+                </div>
+              </div>
+              <div className="min-w-[134px] px-4 py-2.5 rounded-2xl bg-white/[0.07] border border-white/15 backdrop-blur-md shadow-xl hover:border-white/25 transition-all flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E11D48] ring-2 ring-rose-400/60 shadow-[0_0_8px_rgba(225,29,72,0.5)] shrink-0" />
+                <div>
+                  <span className="block text-[11px] font-semibold text-[#94A3B8]">ทีมชุดใหญ่</span>
+                  <span className="text-base font-black font-display text-[#EDBB00]">{promotedCount} คน</span>
+                </div>
+              </div>
+              <div className="min-w-[134px] px-4 py-2.5 rounded-2xl bg-white/[0.07] border border-white/15 backdrop-blur-md shadow-xl hover:border-white/25 transition-all flex items-center gap-3">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B] ring-2 ring-amber-400/60 shadow-[0_0_8px_rgba(245,158,11,0.5)] shrink-0" />
+                <div>
+                  <span className="block text-[11px] font-semibold text-[#94A3B8]">อายุเฉลี่ย</span>
+                  <span className="text-base font-black font-display text-white">{avgAge} ปี</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -228,19 +258,15 @@ export default function PlayersClient({ players }: PlayersClientProps) {
 
       {/* ─── Sticky Filter & Controls Bar ─── */}
       <div
-        className="sticky z-30"
-        style={{
-          top: "72px",
-          backgroundColor: "var(--bg-dark)",
-          borderBottom: "1px solid var(--border-subtle)",
-        }}
+        className="sticky z-30 bg-[#F8FAFD]/90 backdrop-blur-xl border-b border-gray-200/90 shadow-xs"
+        style={{ top: "72px" }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
-          <div className="rounded-2xl glass-dark p-3.5 flex flex-col lg:flex-row items-stretch lg:items-center gap-3 border border-white/10">
+          <div className="rounded-2xl bg-white p-3.5 flex flex-col lg:flex-row items-stretch lg:items-center gap-3 border border-gray-200 shadow-xs">
             {/* Search Input */}
             <div className="relative flex-1">
               <svg
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]"
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -252,12 +278,12 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                 placeholder="ค้นหาชื่อนักเตะ, สัญชาติ, สโมสร..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[var(--surface-3)] border border-[var(--border-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] text-xs sm:text-sm focus:outline-none focus:border-[var(--barca-gold)] transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-[#0B1F40] placeholder-gray-400 text-xs sm:text-sm focus:outline-none focus:border-[#004D98] focus:bg-white focus:ring-1 focus:ring-[#004D98] transition-all"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs p-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 text-xs p-1 cursor-pointer"
                 >
                   ✕
                 </button>
@@ -272,7 +298,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                 value={selectedPosition}
                 onChange={(val) => setSelectedPosition(val as Position | "ALL")}
                 options={positions.map((p) => ({ value: p.value, label: p.label }))}
-                variant="dark"
+                variant="light"
                 size="sm"
                 className="flex-1 sm:flex-none"
                 minMenuWidth="min-w-[160px]"
@@ -284,7 +310,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                 value={selectedStatus}
                 onChange={(val) => setSelectedStatus(val as Status | "ALL")}
                 options={statuses.map((s) => ({ value: s.value, label: s.label }))}
-                variant="dark"
+                variant="light"
                 size="sm"
                 className="flex-1 sm:flex-none"
                 minMenuWidth="min-w-[170px]"
@@ -302,7 +328,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                     label: n,
                   })),
                 ]}
-                variant="dark"
+                variant="light"
                 size="sm"
                 className="flex-1 sm:flex-none"
                 minMenuWidth="min-w-[170px]"
@@ -314,25 +340,26 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                 value={sortBy}
                 onChange={(val) => setSortBy(val)}
                 options={[
+                  { value: "status_desc", label: "เรียงตาม: ลำดับชั้นทีม (First Team)" },
                   { value: "name_asc", label: "เรียงตาม: ชื่อ (A-Z)" },
                   { value: "name_desc", label: "เรียงตาม: ชื่อ (Z-A)" },
+                  { value: "apps_desc", label: "เรียงตาม: นัดที่ลงเล่นพรีซีซั่น" },
                   { value: "age_asc", label: "เรียงตาม: อายุน้อยสุด" },
                   { value: "age_desc", label: "เรียงตาม: อายุมากสุด" },
                   { value: "lamasia_desc", label: "เรียงตาม: เข้า La Masia ล่าสุด" },
-                  { value: "apps_desc", label: "เรียงตาม: นัดที่ลงเล่นพรีซีซั่น" },
                 ]}
-                variant="dark"
+                variant="light"
                 size="sm"
                 className="flex-1 sm:flex-none"
                 minMenuWidth="min-w-[210px]"
               />
 
               {/* View Mode Toggle */}
-              <div className="hidden sm:flex items-center rounded-xl bg-[var(--surface-3)] p-1 border border-white/5">
+              <div className="hidden sm:flex items-center rounded-xl bg-gray-100 p-1 border border-gray-200">
                 <button
                   onClick={() => handleViewModeChange("grid")}
                   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === "grid" ? "bg-white/15 text-white" : "text-gray-400 hover:text-white"
+                    viewMode === "grid" ? "bg-white text-[#0B1F40] shadow-xs" : "text-gray-400 hover:text-gray-700"
                   }`}
                   title="Grid View"
                 >
@@ -343,7 +370,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                 <button
                   onClick={() => handleViewModeChange("table")}
                   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                    viewMode === "table" ? "bg-white/15 text-white" : "text-gray-400 hover:text-white"
+                    viewMode === "table" ? "bg-white text-[#0B1F40] shadow-xs" : "text-gray-400 hover:text-gray-700"
                   }`}
                   title="Table View"
                 >
@@ -356,28 +383,28 @@ export default function PlayersClient({ players }: PlayersClientProps) {
           </div>
 
           {/* Active Filter Pills & Summary */}
-          <div className="mt-3 px-1 flex items-center justify-between flex-wrap gap-2 text-xs text-[var(--text-muted)]">
+          <div className="mt-3 px-1 flex items-center justify-between flex-wrap gap-2 text-xs text-[#64748B]">
             <div className="flex items-center gap-2 flex-wrap">
               <span>
-                แสดง <span className="text-white font-bold">{filteredPlayers.length}</span> จากทั้งหมด {players.length} คน
+                แสดง <span className="text-[#0B1F40] font-bold">{filteredPlayers.length}</span> จากทั้งหมด {players.length} คน
               </span>
               {selectedStatus !== "ALL" && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-[var(--barca-navy)]/30 border border-[var(--barca-navy-light)]/40 text-blue-200 text-[11px]">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-blue-50 border border-blue-200 text-[#004D98] text-[11px] font-semibold">
                   สถานะ: {statuses.find(s => s.value === selectedStatus)?.label}
                 </span>
               )}
               {selectedPosition !== "ALL" && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/20 text-white text-[11px]">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-gray-100 border border-gray-200 text-[#0B1F40] text-[11px] font-semibold">
                   ตำแหน่ง: {positions.find(p => p.value === selectedPosition)?.label}
                 </span>
               )}
               {selectedNationality !== "ALL" && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/30 text-amber-200 text-[11px]">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-amber-900 text-[11px] font-semibold">
                   สัญชาติ: {selectedNationality}
                 </span>
               )}
               {searchQuery && (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white/10 border border-white/20 text-white text-[11px]">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-gray-100 border border-gray-200 text-[#0B1F40] text-[11px] font-semibold">
                   คำค้น: &ldquo;{searchQuery}&rdquo;
                 </span>
               )}
@@ -386,7 +413,7 @@ export default function PlayersClient({ players }: PlayersClientProps) {
             {hasActiveFilters && (
               <button
                 onClick={clearAllFilters}
-                className="text-xs text-[var(--barca-gold)] hover:text-white transition-colors underline cursor-pointer"
+                className="text-xs text-[#004D98] hover:text-[#A2001D] font-bold transition-colors underline cursor-pointer"
               >
                 ✕ ล้างตัวกรองทั้งหมด
               </button>
@@ -398,44 +425,44 @@ export default function PlayersClient({ players }: PlayersClientProps) {
       {/* ─── Main Content Area ─── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {filteredPlayers.length === 0 ? (
-          <div className="text-center py-20 rounded-2xl glass border border-white/10 p-8">
+          <div className="text-center py-20 rounded-2xl bg-white border border-gray-200 p-8 shadow-xs">
             <div className="text-5xl mb-4">🔍</div>
-            <h3 className="text-xl font-bold text-white mb-2">ไม่พบนักเตะที่ตรงกับเงื่อนไข</h3>
-            <p className="text-sm text-[var(--text-muted)] max-w-md mx-auto mb-6">
+            <h3 className="text-xl font-bold text-[#0B1F40] mb-2">ไม่พบนักเตะที่ตรงกับเงื่อนไข</h3>
+            <p className="text-sm text-[#64748B] max-w-md mx-auto mb-6">
               ลองเปลี่ยนคำค้นหา หรือกดล้างตัวกรองเพื่อดูรายชื่อนักเตะทั้งหมดในสโมสร
             </p>
             <button
               onClick={clearAllFilters}
-              className="px-6 py-2.5 rounded-xl text-xs font-bold text-white shadow-md transition-all hover:scale-105"
-              style={{ background: "var(--gradient-barca)" }}
+              className="px-6 py-2.5 rounded-xl text-xs font-bold text-white shadow-md transition-all hover:scale-105 cursor-pointer"
+              style={{ background: "linear-gradient(135deg, #A2001D 0%, #004D98 100%)" }}
             >
               ล้างตัวกรองทั้งหมด
             </button>
           </div>
         ) : viewMode === "grid" ? (
-          /* Grid View */
+          /* Grid View — Style A Light Cards */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 items-stretch">
             {filteredPlayers.map((player, index) => (
-              <PlayerCard key={player.id} player={player} delay={index * 40} />
+              <PlayerCard key={player.id} player={player} delay={index * 40} theme="light" />
             ))}
           </div>
         ) : (
-          /* Table View */
-          <div className="rounded-2xl glass border border-white/10 overflow-hidden shadow-xl">
+          /* Table View — High Contrast Light Database */
+          <div className="rounded-2xl bg-white border border-gray-200/90 overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm text-[var(--text-secondary)]">
-                <thead className="text-xs uppercase bg-[var(--surface-3)]/80 text-[var(--text-muted)] border-b border-white/10">
+              <table className="w-full text-left text-sm text-[#0B1F40]">
+                <thead className="text-xs uppercase bg-[#F8FAFD] text-[#64748B] border-b border-gray-200">
                   <tr>
-                    <th scope="col" className="px-6 py-4 font-semibold">นักเตะ</th>
-                    <th scope="col" className="px-6 py-4 font-semibold text-center">ตำแหน่ง</th>
-                    <th scope="col" className="px-6 py-4 font-semibold text-center">อายุ</th>
-                    <th scope="col" className="px-6 py-4 font-semibold text-center">สัญชาติ</th>
-                    <th scope="col" className="px-6 py-4 font-semibold text-center">สถานะ</th>
-                    <th scope="col" className="px-6 py-4 font-semibold text-center">พรีซีซั่น</th>
-                    <th scope="col" className="px-6 py-4 font-semibold text-right">โปรไฟล์</th>
+                    <th scope="col" className="px-6 py-4 font-bold">นักเตะ</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-center">ตำแหน่ง</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-center">อายุ</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-center">สัญชาติ</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-center">สถานะ</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-center">พรีซีซั่น</th>
+                    <th scope="col" className="px-6 py-4 font-bold text-right">โปรไฟล์</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-gray-100">
                   {filteredPlayers.map((player) => {
                     const age = getAge(player.dateOfBirth);
                     const totalApps = (player.preSeasons || []).reduce((sum, ps) => sum + (ps.appearances || 0), 0);
@@ -443,24 +470,22 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                     const totalAssists = (player.preSeasons || []).reduce((sum, ps) => sum + (ps.assists || 0), 0);
 
                     return (
-                      <tr key={player.id} className="hover:bg-white/[0.03] transition-colors">
+                      <tr key={player.id} className="hover:bg-[#F0F5FD]/60 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link href={`/players/${player.id}`} className="flex items-center gap-3 group">
-                            <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-[var(--surface-3)] border border-white/10 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-gray-50 border border-gray-200 flex items-center justify-center font-bold text-sm text-[#0B1F40]">
                               {player.imageUrl ? (
                                 <img src={player.imageUrl} alt={player.name} className="w-full h-full object-cover object-top" />
                               ) : (
-                                <span className="text-xs font-bold text-white font-display">
-                                  {player.name.slice(0, 2).toUpperCase()}
-                                </span>
+                                <span>{player.name[0]}</span>
                               )}
                             </div>
                             <div>
-                              <div className="font-bold text-white group-hover:text-[var(--barca-gold)] transition-colors">
+                              <div className="font-bold text-[#0B1F40] group-hover:text-[#004D98] transition-colors">
                                 {player.name}
                               </div>
                               {player.jerseyNumber && (
-                                <div className="text-[11px] text-[var(--barca-gold)] font-mono font-medium">
+                                <div className="text-[11px] text-[#64748B] font-mono font-medium">
                                   #{player.jerseyNumber}
                                 </div>
                               )}
@@ -470,11 +495,11 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                           <PositionBadge position={player.position} />
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center text-white font-medium">
+                        <td className="px-6 py-4 whitespace-nowrap text-center text-[#0B1F40] font-medium">
                           {age} ปี
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-xs text-white">
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-gray-50 border border-gray-200 text-xs text-[#0B1F40]">
                             <FlagIcon nationality={player.nationality} emoji={player.flagEmoji} />
                             <span>{player.nationality}</span>
                           </div>
@@ -484,20 +509,20 @@ export default function PlayersClient({ players }: PlayersClientProps) {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center text-xs">
                           {player.preSeasons && player.preSeasons.length > 0 ? (
-                            <div className="font-medium text-white">
-                              {totalApps} นัด · <span className="text-emerald-400 font-bold">{totalGoals}G</span> · <span className="text-blue-400 font-bold">{totalAssists}A</span>
+                            <div className="font-medium text-[#0B1F40]">
+                              {totalApps} นัด · <span className="text-emerald-600 font-bold">{totalGoals}G</span> · <span className="text-blue-600 font-bold">{totalAssists}A</span>
                             </div>
                           ) : (
-                            <span className="text-[var(--text-muted)] text-[11px]">- ยังไม่มีสถิติ -</span>
+                            <span className="text-[#94A3B8] text-[11px]">- ยังไม่มีสถิติ -</span>
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right">
                           <Link
                             href={`/players/${player.id}`}
-                            className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white glass hover:bg-[var(--surface-3)] border border-white/10 transition-all inline-flex items-center gap-1"
+                            className="px-3.5 py-1.5 rounded-xl text-xs font-bold text-[#004D98] bg-[#F0F5FD] hover:bg-[#004D98] hover:text-white border border-[rgba(0,77,152,0.15)] transition-all inline-flex items-center gap-1 group cursor-pointer"
                           >
                             <span>ดูโปรไฟล์</span>
-                            <span>→</span>
+                            <span className="transition-transform group-hover:translate-x-0.5">→</span>
                           </Link>
                         </td>
                       </tr>
